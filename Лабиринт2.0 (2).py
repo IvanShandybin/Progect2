@@ -23,6 +23,8 @@ while True:
         if c.type==pygame.QUIT:
             pygame.quit()
             sys.exit()
+###############################################################################################################
+#######Отслеживание нажатие мыши###############################################################################
         elif c.type == pygame.MOUSEBUTTONDOWN and c.button == 1:
             r=1
             xcor=c.pos[0]
@@ -61,13 +63,13 @@ while True:
                 zvet=10
                 Objekt= "Начало"
 ###############################################################################################################
-###############################################################################################################
+#########Отрисовка#############################################################################################
     disp.fill(b)
     for row in range(height//size):
         for col in range(width//size):
             pygame.draw.rect(disp,a,(col*size,row*size,size,size),1)
     if zvet != 0 and r!=0:
-            pygame.draw.rect(disp, (20*zvet, 20*zvet, 20*zvet), (xcor,ycor, size, size), 100)
+            pygame.draw.rect(disp, (20*zvet, 10*zvet, 4*zvet), (xcor,ycor, size, size), 100)
     if Objekt is not None:
         text=font.render(Objekt,True,a)
         text_rect=text.get_rect(center=(width+100,height//2))
