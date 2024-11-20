@@ -81,7 +81,6 @@ while True:
         text=font.render(Objekt,True,a)
         text_rect=text.get_rect(center=(width+100,height//2))
         disp.blit(text,text_rect)
-    print(pole)
     text=font.render(Paravila,True,a)
     text_rect=text.get_rect(center=(width+400,height-250))
     disp.blit(text,text_rect)
