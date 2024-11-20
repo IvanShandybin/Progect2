@@ -7,6 +7,7 @@ a=(0,0,0)
 b=(255,255,255)
 disp=pygame.display.set_mode((width+800,height))
 Objekt=None
+zvetlast=0
 zvet=0
 r=0
 x=[]
@@ -32,43 +33,40 @@ while True:
                 r=1
                 x.append(c.pos[0])
                 y.append(c.pos[1])
-<<<<<<< Updated upstream
-=======
                 zvet.append(zvetlast)
                 pole[(c.pos[1]//100)][(c.pos[0]//100)]=zvetlast
->>>>>>> Stashed changes
 ###############################################################################################################
 ######## Проверка последней нажатой цифры #####################################################################
         if c.type==pygame.KEYDOWN:
             if c.key==pygame.K_1:
-                zvet=1
+                zvetlast=1
                 Objekt="Минотавр"
             elif c.key==pygame.K_2:
-                zvet=2
+                zvetlast=2
                 Objekt= "Ключ"
             elif c.key==pygame.K_3:
-                zvet=3
+                zvetlast=3
                 Objekt= "Выход"
             elif c.key==pygame.K_4:
-                zvet=4
+                zvetlast=4
                 Objekt="Начало Реки"
             elif c.key==pygame.K_5:
-                zvet=5
+                zvetlast=5
                 Objekt="Конец Реки"
             elif c.key==pygame.K_6:
-                zvet=6
+                zvetlast=6
                 Objekt="Река"
             elif c.key==pygame.K_7:
-                zvet=7
+                zvetlast=7
                 Objekt="Стена"
             elif c.key==pygame.K_8:
-                zvet=8
+                zvetlast=8
                 Objekt="Портал"
             elif c.key==pygame.K_9:
-                zvet=9
+                zvetlast=9
                 Objekt="Больница"
             elif c.key==pygame.K_0:
-                zvet=10
+                zvetlast=10
                 Objekt= "Начало"
 ###############################################################################################################
 #########Отрисовка#############################################################################################
@@ -77,13 +75,8 @@ while True:
         for col in range(width//size):
             pygame.draw.rect(disp,a,(col*size,row*size,size,size),1)
     for i in range(len(x)):
-<<<<<<< Updated upstream
-        if zvet != 0 and r!=0:
-            pygame.draw.rect(disp, (20*zvet, 10*zvet, 4*zvet), (x[i]//100*100,y[i]//100*100, size, size), 100)
-=======
         if zvetlast!=0 and r!=0:
             pygame.draw.rect(disp, (7*zvet[i], 10*zvet[i], 4*zvet[i]), (x[i]//100*100,y[i]//100*100, size, size), 100)
->>>>>>> Stashed changes
     if Objekt is not None:
         text=font.render(Objekt,True,a)
         text_rect=text.get_rect(center=(width+100,height//2))
