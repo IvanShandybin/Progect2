@@ -32,6 +32,11 @@ while True:
                 r=1
                 x.append(c.pos[0])
                 y.append(c.pos[1])
+<<<<<<< Updated upstream
+=======
+                zvet.append(zvetlast)
+                pole[(c.pos[1]//100)][(c.pos[0]//100)]=zvetlast
+>>>>>>> Stashed changes
 ###############################################################################################################
 ######## Проверка последней нажатой цифры #####################################################################
         if c.type==pygame.KEYDOWN:
@@ -72,12 +77,18 @@ while True:
         for col in range(width//size):
             pygame.draw.rect(disp,a,(col*size,row*size,size,size),1)
     for i in range(len(x)):
+<<<<<<< Updated upstream
         if zvet != 0 and r!=0:
             pygame.draw.rect(disp, (20*zvet, 10*zvet, 4*zvet), (x[i]//100*100,y[i]//100*100, size, size), 100)
+=======
+        if zvetlast!=0 and r!=0:
+            pygame.draw.rect(disp, (7*zvet[i], 10*zvet[i], 4*zvet[i]), (x[i]//100*100,y[i]//100*100, size, size), 100)
+>>>>>>> Stashed changes
     if Objekt is not None:
         text=font.render(Objekt,True,a)
         text_rect=text.get_rect(center=(width+100,height//2))
         disp.blit(text,text_rect)
+    print(pole)
     text=font.render(Paravila,True,a)
     text_rect=text.get_rect(center=(width+400,height-250))
     disp.blit(text,text_rect)
