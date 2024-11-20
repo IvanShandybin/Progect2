@@ -9,6 +9,8 @@ disp=pygame.display.set_mode((width+800,height))
 Objekt=None
 zvet=0
 r=0
+x=[]
+y=[]
 font = pygame.font.Font(None, 36)
 Paravila="1-Минотавр 2-Ключ 3-Выход 4-Начало реки 5-Конец реки"
 Paravila2="6-Река 7-Стена 8-Портал 9-Больница 0-Начало"
@@ -26,9 +28,10 @@ while True:
 ###############################################################################################################
 #######Отслеживание нажатие мыши###############################################################################
         elif c.type == pygame.MOUSEBUTTONDOWN and c.button == 1:
-            r=1
-            xcor=c.pos[0]
-            ycor=c.pos[1]
+            if c.pos[0]<width and c.pos[1]<height:
+                r=1
+                x.append(c.pos[0])
+                y.append(c.pos[1])
 ###############################################################################################################
 ######## Проверка последней нажатой цифры #####################################################################
         if c.type==pygame.KEYDOWN:
@@ -68,8 +71,9 @@ while True:
     for row in range(height//size):
         for col in range(width//size):
             pygame.draw.rect(disp,a,(col*size,row*size,size,size),1)
-    if zvet != 0 and r!=0:
-            pygame.draw.rect(disp, (20*zvet, 10*zvet, 4*zvet), (xcor,ycor, size, size), 100)
+    for i in range(len(x)):
+        if zvet != 0 and r!=0:
+            pygame.draw.rect(disp, (20*zvet, 10*zvet, 4*zvet), (x[i]//100*100,y[i]//100*100, size, size), 100)
     if Objekt is not None:
         text=font.render(Objekt,True,a)
         text_rect=text.get_rect(center=(width+100,height//2))
