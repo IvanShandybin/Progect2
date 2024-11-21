@@ -3,24 +3,26 @@ pygame.init()
 width=int(input())
 height=int(input())
 size=100
+m=True
 a=(0,0,0)
 b=(255,255,255)
-disp=pygame.display.set_mode((width+800,height))
+disp=pygame.display.set_mode((1800,1000))
 Objekt=None
 zvetlast=0
 zvet=[]
+r=0
 x=[]
 y=[]
 r=0
 font = pygame.font.Font(None, 36)
+Cnopkagotovo="ГОЙДА"
 Paravila="1-Минотавр 2-Ключ 3-Выход 4-Начало реки 5-Конец реки"
 Paravila2="6-Река 7-Стена 8-Портал 9-Больница 0-Начало"
 ### Задание поля #############################################################################################
 pole=[]
 for i in range(width//size):
     pole.append([0]*(height//size))
-print(pole)
-while True:
+while m==True:
 ###### Закрытие программы #####################################################################################
     for c in pygame.event.get():
         if c.type==pygame.QUIT:
@@ -29,6 +31,8 @@ while True:
 ###############################################################################################################
 #######Отслеживание нажатие мыши###############################################################################
         elif c.type == pygame.MOUSEBUTTONDOWN and c.button == 1:
+            if(1100<c.pos[0]<1300 and 650<c.pos[1]<750):
+                    m=False
             if c.pos[0]<width and c.pos[1]<height and zvetlast!=0:
                 r=1
                 x.append(c.pos[0])
@@ -78,13 +82,16 @@ while True:
             pygame.draw.rect(disp, (20*zvet[i], 10*zvet[i], 4*zvet[i]), (x[i]//100*100,y[i]//100*100, size, size), 100)
     if Objekt is not None:
         text=font.render(Objekt,True,a)
-        text_rect=text.get_rect(center=(width+100,height//2))
+        text_rect=text.get_rect(center=(1300,500))
         disp.blit(text,text_rect)
     text=font.render(Paravila,True,a)
-    text_rect=text.get_rect(center=(width+400,height-250))
+    text_rect=text.get_rect(center=(1300,550))
     disp.blit(text,text_rect)
     text=font.render(Paravila2,True,a)
-    text_rect=text.get_rect(center=(width+400,height-200))
+    text_rect=text.get_rect(center=(1300,600))
+    disp.blit(text,text_rect)
+    text=font.render(Cnopkagotovo,True,a)
+    text_rect=text.get_rect(center=(1300,700))
     disp.blit(text,text_rect)
     pygame.display.flip()
 ############################################################################################################
