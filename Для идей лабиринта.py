@@ -117,10 +117,10 @@ while Igrok2==True:
         if c.type==pygame.KEYDOWN:
             if c.key==pygame.K_UP:     
                 Objekt2=f"Вы сдвинулись на клетку вверх и встретили {Objekt3}"
-                yn=yn+1
+                yn=yn-1
             elif c.key==pygame.K_DOWN:
                 Objekt2= f"Вы сдвинулись на клетку вниз и встретили {Objekt3}"
-                yn=yn-1
+                yn=yn+1
             elif c.key==pygame.K_LEFT:
                 Objekt2= f"Вы сдвинулись на клетку влево и встретили {Objekt3}"
                 xn=xn-1
