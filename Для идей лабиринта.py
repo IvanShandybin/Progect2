@@ -1,9 +1,33 @@
 import pygame,sys
 pygame.init()
+def proverka(xn,yn):
+    if pole[yn][xn]==1:
+        Objekt3="Минотавр"
+    elif pole[yn][xn]==0:
+        Objekt3="Пустая клетка"
+    elif pole[yn][xn]==2:
+        Objekt3="Ключ"
+    elif pole[yn][xn]==3:
+        Objekt3="Выход"
+    elif pole[yn][xn]==4:
+        Objekt3="Начало Реки"
+    elif pole[yn][xn]==5:
+        Objekt3="Конец Реки"
+    elif pole[yn][xn]==6:
+        Objekt3="Река"
+    elif pole[yn][xn]==7:
+        Objekt3="Стена"
+    elif pole[yn][xn]==8:
+        Objekt3="Портал"
+    elif pole[yn][xn]==9:
+        Objekt3="Больница"
+    elif pole[yn][xn]==10:
+        Objekt3="Начало"
+    return Objekt3
 width=int(input())
 height=int(input())
 size=100
-Objekt2=None
+Objekt2="Вы стоите в начале"
 Objekt3="Путую клетку"
 xn=0
 yn=0
@@ -115,44 +139,25 @@ while Igrok2==True:
             pygame.quit()
             sys.exit()
         if c.type==pygame.KEYDOWN:
-            if c.key==pygame.K_UP:     
+            if c.key==pygame.K_UP:   
+                yn=yn-1  
+                Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку вверх и встретили {Objekt3}"
-                yn=yn-1
             elif c.key==pygame.K_DOWN:
-                Objekt2= f"Вы сдвинулись на клетку вниз и встретили {Objekt3}"
                 yn=yn+1
+                Objekt3=proverka(xn,yn)
+                Objekt2=f"Вы сдвинулись на клетку вниз и встретили {Objekt3}"
             elif c.key==pygame.K_LEFT:
-                Objekt2= f"Вы сдвинулись на клетку влево и встретили {Objekt3}"
                 xn=xn-1
+                Objekt3=proverka(xn,yn)
+                Objekt2=f"Вы сдвинулись на клетку влево и встретили {Objekt3}"
             elif c.key==pygame.K_RIGHT:
-                Objekt2= f"Вы сдвинулись на клетку вправо и встретили {Objekt3}"
                 xn=xn+1
-    if pole[yn][xn]==1:
-        Objekt3="Минотавр"
-    elif pole[yn][xn]==0:
-        Objekt3="Пустая клетка"
-    elif pole[yn][xn]==2:
-        Objekt3="Ключ"
-    elif pole[yn][xn]==3:
-        Objekt3="Выход"
-    elif pole[yn][xn]==4:
-        Objekt3="Начало Реки"
-    elif pole[yn][xn]==5:
-        Objekt3="Конец Реки"
-    elif pole[yn][xn]==6:
-        Objekt3="Река"
-    elif pole[yn][xn]==7:
-        Objekt3="Стена"
-    elif pole[yn][xn]==8:
-        Objekt3="Портал"
-    elif pole[yn][xn]==9:
-        Objekt3="Больница"
-    elif pole[yn][xn]==10:
-        Objekt3="Начало"
-    if Objekt2 is not None:
-        text=font.render(Objekt2,True,a)
-        text_rect=text.get_rect(center=(1300,500))
-        disp.blit(text,text_rect)
+                Objekt3=proverka(xn,yn)
+                Objekt2=f"Вы сдвинулись на клетку вправо и встретили {Objekt3}"
+    text=font.render(Objekt2,True,a)
+    text_rect=text.get_rect(center=(1300,500))
+    disp.blit(text,text_rect)
     print(pole)
     print(yn)
     print(xn)
