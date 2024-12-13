@@ -31,6 +31,9 @@ Objekt2="Вы стоите в начале"
 Objekt3="Путую клетку"
 xn=0
 yn=0
+xb=0
+yb=0
+countb=0
 m=True
 Igrok2=False
 a=(0,0,0)
@@ -72,6 +75,10 @@ while m==True:
                 if zvetlast==10 and xn==0 and yn==0:
                     xn=c.pos[0]//100
                     yn=c.pos[1]//100
+                elif zvetlast==9 and countb==0:
+                    xb=c.pos[0]//100
+                    yb=c.pos[1]//100
+                    countb=1
 ###############################################################################################################
 ######## Проверка последней нажатой цифры #####################################################################
         if c.type==pygame.KEYDOWN:
@@ -143,18 +150,38 @@ while Igrok2==True:
                 yn=yn-1  
                 Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку вверх и встретили {Objekt3}"
+                if Objekt3=="Стена":
+                    yn=yn+1
+                elif Objekt3=="Минотавр":
+                    yn=yb
+                    xn=xb
             elif c.key==pygame.K_DOWN:
                 yn=yn+1
                 Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку вниз и встретили {Objekt3}"
+                if Objekt3=="Стена":
+                    yn=yn-1
+                elif Objekt3=="Минотавр":
+                    yn=yb
+                    xn=xb
             elif c.key==pygame.K_LEFT:
                 xn=xn-1
                 Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку влево и встретили {Objekt3}"
+                if Objekt3=="Стена":
+                    xn=xn+1
+                elif Objekt3=="Минотавр":
+                    yn=yb
+                    xn=xb
             elif c.key==pygame.K_RIGHT:
                 xn=xn+1
                 Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку вправо и встретили {Objekt3}"
+                if Objekt3=="Стена":
+                    xn=xn-1
+                elif Objekt3=="Минотавр":
+                    yn=yb
+                    xn=xb
     text=font.render(Objekt2,True,a)
     text_rect=text.get_rect(center=(1300,500))
     disp.blit(text,text_rect)
