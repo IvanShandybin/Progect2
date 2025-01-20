@@ -29,11 +29,14 @@ height=int(input())
 size=100
 Objekt2="Вы стоите в начале"
 Objekt3="Путую клетку"
-xn=0
-yn=0
+xn=-1
+yn=-1
 xb=0
 yb=0
+nom=0
 countb=0
+kluch=0
+nu=0
 m=True
 Igrok2=False
 a=(0,0,0)
@@ -45,7 +48,8 @@ zvet=[]
 r=0
 x=[]
 y=[]
-r=0
+portx=[]
+porty=[]
 font = pygame.font.Font(None, 36)
 Cnopkagotovo="ГОЙДА"
 Paravila="1-Минотавр 2-Ключ 3-Выход 4-Начало реки 5-Конец реки"
@@ -72,13 +76,18 @@ while m==True:
                 y.append(c.pos[1])
                 zvet.append(zvetlast)
                 pole[(c.pos[1]//100)][(c.pos[0]//100)]=zvetlast
-                if zvetlast==10 and xn==0 and yn==0:
+                if zvetlast==10 and xn==-1 and yn==-1:
                     xn=c.pos[0]//100
                     yn=c.pos[1]//100
                 elif zvetlast==9 and countb==0:
                     xb=c.pos[0]//100
                     yb=c.pos[1]//100
                     countb=1
+                elif zvetlast==2:
+                    nu=nu+1
+                elif zvetlast==8:
+                    portx.append(c.pos[0]//100)
+                    porty.append(c.pos[1]//100)
 ###############################################################################################################
 ######## Проверка последней нажатой цифры #####################################################################
         if c.type==pygame.KEYDOWN:
@@ -155,6 +164,20 @@ while Igrok2==True:
                 elif Objekt3=="Минотавр":
                     yn=yb
                     xn=xb
+                elif Objekt3=="Ключ":
+                    kluch=kluch+1
+                    pole[yn][xn]=0
+                elif Objekt3=="Выход" and kluch==nu:
+                    Objekt2="Вы победили!"
+                elif Objekt3=="Портал":
+                    for h in range(len(portx)):
+                        if xn==portx[h] and yn==porty[h]:
+                            nom=h
+                    nom=nom+1
+                    if nom==len(portx):
+                        nom=0
+                    xn=portx[nom]
+                    yn=porty[nom]
             elif c.key==pygame.K_DOWN:
                 yn=yn+1
                 Objekt3=proverka(xn,yn)
@@ -164,6 +187,20 @@ while Igrok2==True:
                 elif Objekt3=="Минотавр":
                     yn=yb
                     xn=xb
+                elif Objekt3=="Ключ":
+                    kluch=kluch+1
+                    pole[yn][xn]=0
+                elif Objekt3=="Выход" and kluch==nu:
+                    Objekt2="Вы победили!"
+                elif Objekt3=="Портал":
+                    for h in range(len(portx)):
+                        if xn==portx[h] and yn==porty[h]:
+                            nom=h
+                    nom=nom+1
+                    if nom==len(portx):
+                        nom=0
+                    xn=portx[nom]
+                    yn=porty[nom]
             elif c.key==pygame.K_LEFT:
                 xn=xn-1
                 Objekt3=proverka(xn,yn)
@@ -173,6 +210,20 @@ while Igrok2==True:
                 elif Objekt3=="Минотавр":
                     yn=yb
                     xn=xb
+                elif Objekt3=="Ключ":
+                    kluch=kluch+1
+                    pole[yn][xn]=0
+                elif Objekt3=="Выход" and kluch==nu:
+                    Objekt2="Вы победили!"
+                elif Objekt3=="Портал":
+                    for h in range(len(portx)):
+                        if xn==portx[h] and yn==porty[h]:
+                            nom=h
+                    nom=nom+1
+                    if nom==len(portx):
+                        nom=0
+                    xn=portx[nom]
+                    yn=porty[nom]
             elif c.key==pygame.K_RIGHT:
                 xn=xn+1
                 Objekt3=proverka(xn,yn)
@@ -182,10 +233,27 @@ while Igrok2==True:
                 elif Objekt3=="Минотавр":
                     yn=yb
                     xn=xb
+                elif Objekt3=="Ключ":
+                    kluch=kluch+1
+                    pole[yn][xn]=0
+                elif Objekt3=="Выход" and kluch==nu:
+                    Objekt2="Вы победили!"
+                elif Objekt3=="Портал":
+                    for h in range(len(portx)):
+                        if xn==portx[h] and yn==porty[h]:
+                            nom=h
+                    nom=nom+1
+                    if nom==len(portx):
+                        nom=0
+                    xn=portx[nom]
+                    yn=porty[nom]
     text=font.render(Objekt2,True,a)
     text_rect=text.get_rect(center=(1300,500))
     disp.blit(text,text_rect)
     print(pole)
     print(yn)
     print(xn)
+    print(nom)
+    print(portx)
+    print(porty)
     pygame.display.flip()
