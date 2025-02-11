@@ -50,6 +50,10 @@ x=[]
 y=[]
 portx=[]
 porty=[]
+rekax=[]
+rekay=[]
+naprav=[]
+napravi=0
 font = pygame.font.Font(None, 36)
 Cnopkagotovo="ГОЙДА"
 Paravila="1-Минотавр 2-Ключ 3-Выход 4-Начало реки 5-Конец реки"
@@ -88,6 +92,63 @@ while m==True:
                 elif zvetlast==8:
                     portx.append(c.pos[0]//100)
                     porty.append(c.pos[1]//100)
+                elif zvetlast==4:
+                    rekax.append(c.pos[0]//100)
+                    rekay.append(c.pos[1]//100)
+                    napravi=1
+                    while napravi==1:
+                        for k in pygame.event.get():
+                            if k.type==pygame.KEYDOWN:
+                                if k.key==pygame.K_UP:
+                                   naprav.append(1)
+                                   napravi=0
+                                elif k.key==pygame.K_DOWN:
+                                   naprav.append(2)
+                                   napravi=0
+                                elif k.key==pygame.K_LEFT:
+                                    naprav.append(3)
+                                    napravi=0
+                                elif k.key==pygame.K_RIGHT:
+                                    naprav.append(4)
+                                    napravi=0
+                elif zvetlast==5:
+                    rekax.append(c.pos[0]//100)
+                    rekay.append(c.pos[1]//100)
+                    napravi=1
+                    while napravi==1:
+                        for k in pygame.event.get():
+                            if k.type==pygame.KEYDOWN:
+                                if k.key==pygame.K_UP:
+                                   naprav.append(1)
+                                   napravi=0
+                                elif k.key==pygame.K_DOWN:
+                                   naprav.append(2)
+                                   napravi=0
+                                elif k.key==pygame.K_LEFT:
+                                    naprav.append(3)
+                                    napravi=0
+                                elif k.key==pygame.K_RIGHT:
+                                    naprav.append(4)
+                                    napravi=0
+                elif zvetlast==6:
+                    rekax.append(c.pos[0]//100)
+                    rekay.append(c.pos[1]//100)
+                    napravi=1
+                    while napravi==1:
+                        for k in pygame.event.get():
+                            if k.type==pygame.KEYDOWN:
+                                if k.key==pygame.K_UP:
+                                   naprav.append(1)
+                                   napravi=0
+                                elif k.key==pygame.K_DOWN:
+                                   naprav.append(2)
+                                   napravi=0
+                                elif k.key==pygame.K_LEFT:
+                                    naprav.append(3)
+                                    napravi=0
+                                elif k.key==pygame.K_RIGHT:
+                                    naprav.append(4)
+                                    napravi=0
 ###############################################################################################################
 ######## Проверка последней нажатой цифры #####################################################################
         if c.type==pygame.KEYDOWN:
@@ -178,6 +239,18 @@ while Igrok2==True:
                         nom=0
                     xn=portx[nom]
                     yn=porty[nom]
+                elif Objekt3=="Начало Реки":
+                    for h in range(len(rekax)):
+                        if xn==rekax[h] and yn==rekay[h]:
+                            nom=h
+                    if naprav[nom]==1:
+                        yn=yn-1
+                    elif naprav[nom]==2:
+                        yn=yn+1
+                    elif naprav[nom]==3:
+                        xn=xn-1
+                    elif naprav[nom]==4:
+                        xn=xn+1
             elif c.key==pygame.K_DOWN:
                 yn=yn+1
                 Objekt3=proverka(xn,yn)
@@ -201,6 +274,18 @@ while Igrok2==True:
                         nom=0
                     xn=portx[nom]
                     yn=porty[nom]
+                elif Objekt3=="Начало Реки":
+                    for h in range(len(rekax)):
+                        if xn==rekax[h] and yn==rekay[h]:
+                            nom=h
+                    if naprav[nom]==1:
+                        yn=yn-1
+                    elif naprav[nom]==2:
+                        yn=yn+1
+                    elif naprav[nom]==3:
+                        xn=xn-1
+                    elif naprav[nom]==4:
+                        xn=xn+1
             elif c.key==pygame.K_LEFT:
                 xn=xn-1
                 Objekt3=proverka(xn,yn)
@@ -224,6 +309,18 @@ while Igrok2==True:
                         nom=0
                     xn=portx[nom]
                     yn=porty[nom]
+                elif Objekt3=="Начало Реки":
+                    for h in range(len(rekax)):
+                        if xn==rekax[h] and yn==rekay[h]:
+                            nom=h
+                    if naprav[nom]==1:
+                        yn=yn-1
+                    elif naprav[nom]==2:
+                        yn=yn+1
+                    elif naprav[nom]==3:
+                        xn=xn-1
+                    elif naprav[nom]==4:
+                        xn=xn+1
             elif c.key==pygame.K_RIGHT:
                 xn=xn+1
                 Objekt3=proverka(xn,yn)
@@ -247,6 +344,18 @@ while Igrok2==True:
                         nom=0
                     xn=portx[nom]
                     yn=porty[nom]
+                elif Objekt3=="Начало Реки":
+                    for h in range(len(rekax)):
+                        if xn==rekax[h] and yn==rekay[h]:
+                            nom=h
+                    if naprav[nom]==1:
+                        yn=yn-1
+                    elif naprav[nom]==2:
+                        yn=yn+1
+                    elif naprav[nom]==3:
+                        xn=xn-1
+                    elif naprav[nom]==4:
+                        xn=xn+1
     text=font.render(Objekt2,True,a)
     text_rect=text.get_rect(center=(1300,500))
     disp.blit(text,text_rect)
@@ -254,6 +363,7 @@ while Igrok2==True:
     print(yn)
     print(xn)
     print(nom)
-    print(portx)
-    print(porty)
+    print(rekax)
+    print(rekay)
+    print(naprav)
     pygame.display.flip()
