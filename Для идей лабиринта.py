@@ -111,6 +111,7 @@ while m==True:
                                 elif k.key==pygame.K_RIGHT:
                                     naprav.append(4)
                                     napravi=0
+<<<<<<< Updated upstream
                 elif zvetlast==5:
                     rekax.append(c.pos[0]//100)
                     rekay.append(c.pos[1]//100)
@@ -130,6 +131,8 @@ while m==True:
                                 elif k.key==pygame.K_RIGHT:
                                     naprav.append(4)
                                     napravi=0
+=======
+>>>>>>> Stashed changes
                 elif zvetlast==6:
                     rekax.append(c.pos[0]//100)
                     rekay.append(c.pos[1]//100)
