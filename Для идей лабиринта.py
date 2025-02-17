@@ -111,28 +111,6 @@ while m==True:
                                 elif k.key==pygame.K_RIGHT:
                                     naprav.append(4)
                                     napravi=0
-<<<<<<< Updated upstream
-                elif zvetlast==5:
-                    rekax.append(c.pos[0]//100)
-                    rekay.append(c.pos[1]//100)
-                    napravi=1
-                    while napravi==1:
-                        for k in pygame.event.get():
-                            if k.type==pygame.KEYDOWN:
-                                if k.key==pygame.K_UP:
-                                   naprav.append(1)
-                                   napravi=0
-                                elif k.key==pygame.K_DOWN:
-                                   naprav.append(2)
-                                   napravi=0
-                                elif k.key==pygame.K_LEFT:
-                                    naprav.append(3)
-                                    napravi=0
-                                elif k.key==pygame.K_RIGHT:
-                                    naprav.append(4)
-                                    napravi=0
-=======
->>>>>>> Stashed changes
                 elif zvetlast==6:
                     rekax.append(c.pos[0]//100)
                     rekay.append(c.pos[1]//100)
@@ -254,8 +232,6 @@ while Igrok2==True:
                         xn=xn-1
                     elif naprav[nom]==4:
                         xn=xn+1
-<<<<<<< Updated upstream
-=======
                 elif Objekt3=="Река":
                     for h in range(len(rekax)):
                         if xn==rekax[h] and yn==rekay[h]:
@@ -268,7 +244,6 @@ while Igrok2==True:
                         xn=xn-1
                     elif naprav[nom]==4:
                         xn=xn+1
->>>>>>> Stashed changes
             elif c.key==pygame.K_DOWN:
                 yn=yn+1
                 Objekt3=proverka(xn,yn)
@@ -304,8 +279,6 @@ while Igrok2==True:
                         xn=xn-1
                     elif naprav[nom]==4:
                         xn=xn+1
-<<<<<<< Updated upstream
-=======
                 elif Objekt3=="Река":
                     for h in range(len(rekax)):
                         if xn==rekax[h] and yn==rekay[h]:
@@ -318,7 +291,6 @@ while Igrok2==True:
                         xn=xn-1
                     elif naprav[nom]==4:
                         xn=xn+1
->>>>>>> Stashed changes
             elif c.key==pygame.K_LEFT:
                 xn=xn-1
                 Objekt3=proverka(xn,yn)
@@ -354,8 +326,6 @@ while Igrok2==True:
                         xn=xn-1
                     elif naprav[nom]==4:
                         xn=xn+1
-<<<<<<< Updated upstream
-=======
                 elif Objekt3=="Река":
                     for h in range(len(rekax)):
                         if xn==rekax[h] and yn==rekay[h]:
@@ -368,7 +338,6 @@ while Igrok2==True:
                         xn=xn-1
                     elif naprav[nom]==4:
                         xn=xn+1
->>>>>>> Stashed changes
             elif c.key==pygame.K_RIGHT:
                 xn=xn+1
                 Objekt3=proverka(xn,yn)
@@ -404,8 +373,6 @@ while Igrok2==True:
                         xn=xn-1
                     elif naprav[nom]==4:
                         xn=xn+1
-<<<<<<< Updated upstream
-=======
                 elif Objekt3=="Река":
                     for h in range(len(rekax)):
                         if xn==rekax[h] and yn==rekay[h]:
@@ -418,7 +385,6 @@ while Igrok2==True:
                         xn=xn-1
                     elif naprav[nom]==4:
                         xn=xn+1
->>>>>>> Stashed changes
     text=font.render(Objekt2,True,a)
     text_rect=text.get_rect(center=(1300,500))
     disp.blit(text,text_rect)
@@ -429,8 +395,4 @@ while Igrok2==True:
     print(rekax)
     print(rekay)
     print(naprav)
-<<<<<<< Updated upstream
     pygame.display.flip()
-=======
-    pygame.display.flip()
->>>>>>> Stashed changes
