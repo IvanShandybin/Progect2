@@ -35,18 +35,18 @@ def portal(xn,yn):
         yn=porty[nom]
         return xn,yn
 def reca(xn,yn):
-    for h in range(len(rekax)):
-        if xn==rekax[h] and yn==rekay[h]:
-            nom=h
-    if naprav[nom]==1:
-        yn=yn-1
-    elif naprav[nom]==2:
-        yn=yn+1
-    elif naprav[nom]==3:
-        xn=xn-1
-    elif naprav[nom]==4:
-        xn=xn+1
-    return xn,yn
+        for h in range(len(rekax)):
+            if xn==rekax[h] and yn==rekay[h]:
+                nom=h
+        if naprav[nom]==1:
+            yn=yn-1
+        elif naprav[nom]==2:
+            yn=yn+1
+        elif naprav[nom]==3:
+            xn=xn-1
+        elif naprav[nom]==4:
+            xn=xn+1
+        return xn,yn
 width=int(input())
 height=int(input())
 size=100
@@ -135,24 +135,38 @@ while m==True:
                                     naprav.append(4)
                                     napravi=0
                 elif zvetlast==6:
-                    rekax.append(c.pos[0]//100)
-                    rekay.append(c.pos[1]//100)
-                    napravi=1
-                    while napravi==1:
-                        for k in pygame.event.get():
-                            if k.type==pygame.KEYDOWN:
-                                if k.key==pygame.K_UP:
-                                   naprav.append(1)
-                                   napravi=0
-                                elif k.key==pygame.K_DOWN:
-                                   naprav.append(2)
-                                   napravi=0
-                                elif k.key==pygame.K_LEFT:
-                                    naprav.append(3)
-                                    napravi=0
-                                elif k.key==pygame.K_RIGHT:
-                                    naprav.append(4)
-                                    napravi=0
+                        has_neighbor = False
+                        if c.pos[1]//100>0 and pole[c.pos[1]//100-1][c.pos[0]//100]==4:
+                            has_neighbor=True
+                        if c.pos[1]//100<len(pole)-1 and pole[c.pos[1]//100+1][c.pos[0]//100]==4:
+                            has_neighbor=True
+                        if c.pos[0]//100<len(pole[0])-1 and pole[c.pos[1]//100][c.pos[0]//100+1]==4: 
+                            has_neighbor=True
+                        if c.pos[0]//100>0 and pole[c.pos[1]//100][c.pos[0]//100-1]==4:
+                            has_neighbor=True
+                        if has_neighbor:
+                            rekax.append(c.pos[0]//100)
+                            rekay.append(c.pos[1]//100)
+                            napravi=1
+                            while napravi==1:
+                                for k in pygame.event.get():
+                                    if k.type==pygame.KEYDOWN:
+                                        if k.key==pygame.K_UP:
+                                            naprav.append(1)
+                                            napravi=0
+                                        elif k.key==pygame.K_DOWN:
+                                            naprav.append(2)
+                                            napravi=0
+                                        elif k.key==pygame.K_LEFT:
+                                            naprav.append(3)
+                                            napravi=0
+                                        elif k.key==pygame.K_RIGHT:
+                                            naprav.append(4)
+                                            napravi=0
+                        else:
+                            Objekt="Неа"
+                            x.pop(len(x)-1)
+                            y.pop(len(y)-1)
 ###############################################################################################################
 ######## Проверка последней нажатой цифры #####################################################################
         if c.type==pygame.KEYDOWN:
@@ -222,7 +236,10 @@ while Igrok2==True:
         if c.type==pygame.KEYDOWN:
             if c.key==pygame.K_UP:   
                 yn=yn-1  
-                Objekt3=proverka(xn,yn)
+                if yn<0:
+                    Objekt3="Стена"
+                else:
+                    Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку вверх и встретили {Objekt3}"
                 if Objekt3=="Стена":
                     yn=yn+1
@@ -242,7 +259,10 @@ while Igrok2==True:
                     xn,yn=reca(xn,yn)
             elif c.key==pygame.K_DOWN:
                 yn=yn+1
-                Objekt3=proverka(xn,yn)
+                if yn==height//100:
+                    Objekt3="Стена"
+                else:
+                    Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку вниз и встретили {Objekt3}"
                 if Objekt3=="Стена":
                     yn=yn-1
@@ -262,7 +282,10 @@ while Igrok2==True:
                     xn,yn=reca(xn,yn)
             elif c.key==pygame.K_LEFT:
                 xn=xn-1
-                Objekt3=proverka(xn,yn)
+                if xn<0:
+                    Objekt3="Стена"
+                else:
+                    Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку влево и встретили {Objekt3}"
                 if Objekt3=="Стена":
                     xn=xn+1
@@ -282,7 +305,10 @@ while Igrok2==True:
                     xn,yn=reca(xn,yn)
             elif c.key==pygame.K_RIGHT:
                 xn=xn+1
-                Objekt3=proverka(xn,yn)
+                if xn==width//100:
+                    Objekt3="Стена"
+                else:
+                    Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку вправо и встретили {Objekt3}"
                 if Objekt3=="Стена":
                     xn=xn-1
