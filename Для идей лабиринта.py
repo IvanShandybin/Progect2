@@ -1,4 +1,4 @@
-import pygame,sys
+import pygame,sys,subprocess,threading
 pygame.init()
 def proverka(xn,yn):
     if pole[yn][xn]==1:
@@ -24,6 +24,8 @@ def proverka(xn,yn):
     elif pole[yn][xn]==10:
         Objekt3="Начало"
     return Objekt3
+def run_infinite_field():
+    subprocess.run([sys.executable, 'd:\Загрузки\бесконечное поле.txt'])
 width=int(input())
 height=int(input())
 size=100
@@ -196,6 +198,9 @@ while Igrok2==True:
         if c.type==pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if c.type == pygame.MOUSEBUTTONDOWN and c.button == 1:
+            if(1100<c.pos[0]<1300 and 650<c.pos[1]<850):
+                threading.Thread(target=run_infinite_field).start()
         if c.type==pygame.KEYDOWN:
             if c.key==pygame.K_UP:   
                 yn=yn-1  
@@ -388,6 +393,7 @@ while Igrok2==True:
     text=font.render(Objekt2,True,a)
     text_rect=text.get_rect(center=(1300,500))
     disp.blit(text,text_rect)
+    pygame.draw.rect(disp,a,(1100,650,200,200),1)
     print(pole)
     print(yn)
     print(xn)
