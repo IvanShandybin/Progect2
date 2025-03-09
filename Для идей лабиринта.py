@@ -1,4 +1,4 @@
-import pygame,sys
+import pygame,sys,subprocess,threading
 pygame.init()
 def proverka(xn,yn):
     if pole[yn][xn]==1:
@@ -24,6 +24,31 @@ def proverka(xn,yn):
     elif pole[yn][xn]==10:
         Objekt3="Начало"
     return Objekt3
+def run_infinite_field():
+    subprocess.run([sys.executable, 'd:\Загрузки\бесконечное поле.py'])
+def reca(xn,yn):
+        for h in range(len(rekax)):
+            if xn==rekax[h] and yn==rekay[h]:
+                nom=h
+        if naprav[nom]==1:
+            yn=yn-1
+        elif naprav[nom]==2:
+            yn=yn+1
+        elif naprav[nom]==3:
+            xn=xn-1
+        elif naprav[nom]==4:
+            xn=xn+1
+        return xn,yn
+def portal(xn,yn):
+    for h in range(len(portx)):
+        if xn==portx[h] and yn==porty[h]:
+            nom=h
+        nom=nom+1
+        if nom==len(portx):
+            nom=0
+        xn=portx[nom]
+        yn=porty[nom]
+        return xn,yn
 width=int(input())
 height=int(input())
 size=100
@@ -196,10 +221,16 @@ while Igrok2==True:
         if c.type==pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if c.type == pygame.MOUSEBUTTONDOWN and c.button == 1:
+            if(1100<c.pos[0]<1300 and 650<c.pos[1]<850):
+                threading.Thread(target=run_infinite_field).start()
         if c.type==pygame.KEYDOWN:
             if c.key==pygame.K_UP:   
                 yn=yn-1  
-                Objekt3=proverka(xn,yn)
+                if yn<0:
+                    Objekt3="Стена"
+                else:
+                    Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку вверх и встретили {Objekt3}"
                 if Objekt3=="Стена":
                     yn=yn+1
@@ -212,41 +243,17 @@ while Igrok2==True:
                 elif Objekt3=="Выход" and kluch==nu:
                     Objekt2="Вы победили!"
                 elif Objekt3=="Портал":
-                    for h in range(len(portx)):
-                        if xn==portx[h] and yn==porty[h]:
-                            nom=h
-                    nom=nom+1
-                    if nom==len(portx):
-                        nom=0
-                    xn=portx[nom]
-                    yn=porty[nom]
+                    xn,yn=portal(xn,yn)
                 elif Objekt3=="Начало Реки":
-                    for h in range(len(rekax)):
-                        if xn==rekax[h] and yn==rekay[h]:
-                            nom=h
-                    if naprav[nom]==1:
-                        yn=yn-1
-                    elif naprav[nom]==2:
-                        yn=yn+1
-                    elif naprav[nom]==3:
-                        xn=xn-1
-                    elif naprav[nom]==4:
-                        xn=xn+1
+                   xn,yn=reca(xn,yn)
                 elif Objekt3=="Река":
-                    for h in range(len(rekax)):
-                        if xn==rekax[h] and yn==rekay[h]:
-                            nom=h
-                    if naprav[nom]==1:
-                        yn=yn-1
-                    elif naprav[nom]==2:
-                        yn=yn+1
-                    elif naprav[nom]==3:
-                        xn=xn-1
-                    elif naprav[nom]==4:
-                        xn=xn+1
+                    xn,yn=reca(xn,yn)
             elif c.key==pygame.K_DOWN:
                 yn=yn+1
-                Objekt3=proverka(xn,yn)
+                if yn==height//100:
+                    Objekt3="Стена"
+                else:
+                    Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку вниз и встретили {Objekt3}"
                 if Objekt3=="Стена":
                     yn=yn-1
@@ -259,41 +266,17 @@ while Igrok2==True:
                 elif Objekt3=="Выход" and kluch==nu:
                     Objekt2="Вы победили!"
                 elif Objekt3=="Портал":
-                    for h in range(len(portx)):
-                        if xn==portx[h] and yn==porty[h]:
-                            nom=h
-                    nom=nom+1
-                    if nom==len(portx):
-                        nom=0
-                    xn=portx[nom]
-                    yn=porty[nom]
+                    xn,yn=portal(xn,yn)
                 elif Objekt3=="Начало Реки":
-                    for h in range(len(rekax)):
-                        if xn==rekax[h] and yn==rekay[h]:
-                            nom=h
-                    if naprav[nom]==1:
-                        yn=yn-1
-                    elif naprav[nom]==2:
-                        yn=yn+1
-                    elif naprav[nom]==3:
-                        xn=xn-1
-                    elif naprav[nom]==4:
-                        xn=xn+1
+                    xn,yn=reca(xn,yn)
                 elif Objekt3=="Река":
-                    for h in range(len(rekax)):
-                        if xn==rekax[h] and yn==rekay[h]:
-                            nom=h
-                    if naprav[nom]==1:
-                        yn=yn-1
-                    elif naprav[nom]==2:
-                        yn=yn+1
-                    elif naprav[nom]==3:
-                        xn=xn-1
-                    elif naprav[nom]==4:
-                        xn=xn+1
+                    xn,yn=reca(xn,yn)
             elif c.key==pygame.K_LEFT:
                 xn=xn-1
-                Objekt3=proverka(xn,yn)
+                if xn<0:
+                    Objekt3="Стена"
+                else:
+                    Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку влево и встретили {Objekt3}"
                 if Objekt3=="Стена":
                     xn=xn+1
@@ -306,41 +289,17 @@ while Igrok2==True:
                 elif Objekt3=="Выход" and kluch==nu:
                     Objekt2="Вы победили!"
                 elif Objekt3=="Портал":
-                    for h in range(len(portx)):
-                        if xn==portx[h] and yn==porty[h]:
-                            nom=h
-                    nom=nom+1
-                    if nom==len(portx):
-                        nom=0
-                    xn=portx[nom]
-                    yn=porty[nom]
+                    xn,yn=portal(xn,yn)
                 elif Objekt3=="Начало Реки":
-                    for h in range(len(rekax)):
-                        if xn==rekax[h] and yn==rekay[h]:
-                            nom=h
-                    if naprav[nom]==1:
-                        yn=yn-1
-                    elif naprav[nom]==2:
-                        yn=yn+1
-                    elif naprav[nom]==3:
-                        xn=xn-1
-                    elif naprav[nom]==4:
-                        xn=xn+1
+                    xn,yn=reca(xn,yn)
                 elif Objekt3=="Река":
-                    for h in range(len(rekax)):
-                        if xn==rekax[h] and yn==rekay[h]:
-                            nom=h
-                    if naprav[nom]==1:
-                        yn=yn-1
-                    elif naprav[nom]==2:
-                        yn=yn+1
-                    elif naprav[nom]==3:
-                        xn=xn-1
-                    elif naprav[nom]==4:
-                        xn=xn+1
+                    xn,yn=reca(xn,yn)
             elif c.key==pygame.K_RIGHT:
                 xn=xn+1
-                Objekt3=proverka(xn,yn)
+                if xn==width//100:
+                    Objekt3="Стена"
+                else:
+                    Objekt3=proverka(xn,yn)
                 Objekt2=f"Вы сдвинулись на клетку вправо и встретили {Objekt3}"
                 if Objekt3=="Стена":
                     xn=xn-1
@@ -353,41 +312,15 @@ while Igrok2==True:
                 elif Objekt3=="Выход" and kluch==nu:
                     Objekt2="Вы победили!"
                 elif Objekt3=="Портал":
-                    for h in range(len(portx)):
-                        if xn==portx[h] and yn==porty[h]:
-                            nom=h
-                    nom=nom+1
-                    if nom==len(portx):
-                        nom=0
-                    xn=portx[nom]
-                    yn=porty[nom]
+                    xn,yn=portal(xn,yn)
                 elif Objekt3=="Начало Реки":
-                    for h in range(len(rekax)):
-                        if xn==rekax[h] and yn==rekay[h]:
-                            nom=h
-                    if naprav[nom]==1:
-                        yn=yn-1
-                    elif naprav[nom]==2:
-                        yn=yn+1
-                    elif naprav[nom]==3:
-                        xn=xn-1
-                    elif naprav[nom]==4:
-                        xn=xn+1
+                    xn,yn=reca(xn,yn)
                 elif Objekt3=="Река":
-                    for h in range(len(rekax)):
-                        if xn==rekax[h] and yn==rekay[h]:
-                            nom=h
-                    if naprav[nom]==1:
-                        yn=yn-1
-                    elif naprav[nom]==2:
-                        yn=yn+1
-                    elif naprav[nom]==3:
-                        xn=xn-1
-                    elif naprav[nom]==4:
-                        xn=xn+1
+                    xn,yn=reca(xn,yn)
     text=font.render(Objekt2,True,a)
     text_rect=text.get_rect(center=(1300,500))
     disp.blit(text,text_rect)
+    pygame.draw.rect(disp,a,(1100,650,200,200),1)
     print(pole)
     print(yn)
     print(xn)
