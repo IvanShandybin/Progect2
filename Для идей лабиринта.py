@@ -25,6 +25,7 @@ def proverka(xn,yn):
         Objekt3="Начало"
     return Objekt3
 def run_infinite_field():
+<<<<<<< HEAD
     subprocess.run([sys.executable, 'd:\Загрузки\бесконечное поле.py'])
 def reca(xn,yn):
         for h in range(len(rekax)):
@@ -49,6 +50,9 @@ def portal(xn,yn):
         xn=portx[nom]
         yn=porty[nom]
         return xn,yn
+=======
+    subprocess.run([sys.executable, 'd:\Загрузки\бесконечное поле.txt'])
+>>>>>>> 55ea5f7171cc46658a38a6cb48d511bfd5c17c3d
 width=int(input())
 height=int(input())
 size=100
