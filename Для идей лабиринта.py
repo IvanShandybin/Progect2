@@ -1,5 +1,24 @@
-import pygame,sys,subprocess,threading
+import pygame,sys,subprocess,threading,os
 pygame.init()
+def find_file(filename, search_path):
+    for root, dirs, files in os.walk(search_path):
+        if filename in files:
+            return os.path.join(root, filename)
+    return None
+filename="ads.py"
+file_path=find_file(filename, os.getcwd())
+images={
+    1:pygame.transform.scale(pygame.image.load('1.png'), (100, 100)),
+    2:pygame.transform.scale(pygame.image.load('2.png'), (100, 100)),
+    3:pygame.transform.scale(pygame.image.load('3.png'), (100, 100)),
+    4:pygame.transform.scale(pygame.image.load('4.png'), (100, 100)),
+    5:pygame.transform.scale(pygame.image.load('5.png'), (100, 100)),
+    6:pygame.transform.scale(pygame.image.load('6.png'), (100, 100)), 
+    7:pygame.transform.scale(pygame.image.load('7.png'), (100, 100)), 
+    8:pygame.transform.scale(pygame.image.load('8.png'), (100, 100)),
+    9:pygame.transform.scale(pygame.image.load('9.png'), (100, 100)), 
+    10:pygame.transform.scale(pygame.image.load('10.png'), (100, 100)),
+}
 def proverka(xn,yn):
     if pole[yn][xn]==1:
         Objekt3="Минотавр"
@@ -25,7 +44,7 @@ def proverka(xn,yn):
         Objekt3="Начало"
     return Objekt3
 def run_infinite_field():
-    subprocess.run([sys.executable, 'd:\Загрузки\бесконечное поле.py'])
+    subprocess.run([sys.executable,file_path])
 def reca(xn,yn):
         for h in range(len(rekax)):
             if xn==rekax[h] and yn==rekay[h]:
@@ -196,7 +215,7 @@ while m==True:
             pygame.draw.rect(disp,a,(col*size,row*size,size,size),1)
     for i in range(len(x)):
         if zvetlast!=0 and r!=0:
-            pygame.draw.rect(disp, (20*zvet[i], 10*zvet[i], 4*zvet[i]), (x[i]//100*100,y[i]//100*100, size, size), 100)
+            disp.blit(images[zvet[i]],(x[i]//100*100,y[i]//100*100))
     if Objekt is not None:
         text=font.render(Objekt,True,a)
         text_rect=text.get_rect(center=(1300,500))
@@ -326,6 +345,9 @@ while Igrok2==True:
     print(xn)
     print(nom)
     print(rekax)
+    print(rekay)
+    print(naprav)
+    pygame.display.flip()
     print(rekay)
     print(naprav)
     pygame.display.flip()
