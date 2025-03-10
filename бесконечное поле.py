@@ -1,22 +1,60 @@
-import pygame
-import sys
+import pygame,sys
 pygame.init()
 SCREEN_WIDTH=1800
 SCREEN_HEIGHT=1000
-screen=pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
-WHITE=(255,255,255)
-BLACK=(0,0,0)
-RED=(255,0,0)
+screen=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+WHITE=(255, 255, 255)
+BLACK=(0, 0, 0)
+RED=(255, 0, 0)
 CELL_SIZE=50
 view_x=0
 view_y=0
 MOVE_SPEED=10
 clock=pygame.time.Clock()
+pole=[[0 for _ in range(SCREEN_HEIGHT // CELL_SIZE)] for _ in range(SCREEN_WIDTH // CELL_SIZE)]
+zvetlast=0
+Objekt=None
 running=True
 while running:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
-            running=False
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            cell_x = (event.pos[0] + view_x) // CELL_SIZE
+            cell_y = (event.pos[1] + view_y) // CELL_SIZE
+            if 0 <= cell_x < len(pole) and 0 <= cell_y < len(pole[0]):
+                pole[cell_x][cell_y] = zvetlast
+        elif event.type==pygame.KEYDOWN:
+            if event.key==pygame.K_1:
+                zvetlast=1
+                Objekt="Минотавр"
+            elif event.key==pygame.K_2:
+                zvetlast=2
+                Objekt="Ключ"
+            elif event.key==pygame.K_3:
+                zvetlast=3
+                Objekt = "Выход"
+            elif event.key==pygame.K_4:
+                zvetlast=4
+                Objekt="Начало Реки"
+            elif event.key==pygame.K_5:
+                zvetlast=5
+                Objekt="Конец Реки"
+            elif event.key==pygame.K_6:
+                zvetlast=6
+                Objekt="Река"
+            elif event.key==pygame.K_7:
+                zvetlast=7
+                Objekt="Стена"
+            elif event.key==pygame.K_8:
+                zvetlast=8
+                Objekt="Портал"
+            elif event.key==pygame.K_9:
+                zvetlast=9
+                Objekt="Больница"
+            elif event.key==pygame.K_0:
+                zvetlast=10
+                Objekt="Начало"
     keys=pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
         view_x-=MOVE_SPEED
@@ -26,18 +64,33 @@ while running:
         view_y-=MOVE_SPEED
     if keys[pygame.K_DOWN]:
         view_y+=MOVE_SPEED
+    if view_x<0:
+        view_x+=MOVE_SPEED
+    if view_y<0:
+        view_y+=MOVE_SPEED
     screen.fill(WHITE)
     start_x=view_x//CELL_SIZE
     start_y=view_y//CELL_SIZE
     end_x=(view_x+SCREEN_WIDTH)//CELL_SIZE+1
     end_y=(view_y+SCREEN_HEIGHT)//CELL_SIZE+1
-    for i in range(start_x,end_x):
-        for j in range(start_y,end_y):
+    for i in range(start_x, end_x):
+        for j in range(start_y, end_y):
             screen_x=i*CELL_SIZE-view_x
             screen_y=j*CELL_SIZE-view_y
             pygame.draw.rect(screen,BLACK,(screen_x,screen_y,CELL_SIZE,CELL_SIZE),1)
             if i==0 and j==0:
                 pygame.draw.rect(screen,RED,(screen_x,screen_y,CELL_SIZE,CELL_SIZE))
+    for i in range(len(pole)):
+        for j in range(len(pole[i])):
+            if pole[i][j]!=0:
+                screen_x=i*CELL_SIZE-view_x
+                screen_y =j*CELL_SIZE-view_y
+                color = (20*pole[i][j],10*pole[i][j],4*pole[i][j])
+                pygame.draw.rect(screen,color,(screen_x,screen_y,CELL_SIZE,CELL_SIZE))
+    if Objekt is not None:
+        font=pygame.font.Font(None, 36)
+        text=font.render(Objekt,True,BLACK)
+        screen.blit(text,(10, 10))
     pygame.display.flip()
     clock.tick(120)
 pygame.quit()
