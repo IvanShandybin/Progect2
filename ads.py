@@ -18,11 +18,11 @@ running=True
 while running:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
-            running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            cell_x = (event.pos[0] + view_x) // CELL_SIZE
-            cell_y = (event.pos[1] + view_y) // CELL_SIZE
-            if 0 <= cell_x < len(pole) and 0 <= cell_y < len(pole[0]):
+            running =False
+        elif event.type==pygame.MOUSEBUTTONDOWN and event.button==1:
+            cell_x=(event.pos[0]+view_x)//CELL_SIZE
+            cell_y=(event.pos[1]+view_y)//CELL_SIZE
+            if 0<=cell_x<len(pole) and 0<=cell_y< en(pole[0]):
                 pole[cell_x][cell_y] = zvetlast
         elif event.type==pygame.KEYDOWN:
             if event.key==pygame.K_1:
