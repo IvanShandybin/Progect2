@@ -1,97 +1,344 @@
-import pygame,sys
+import pygame,sys,subprocess,threading,os
 pygame.init()
-SCREEN_WIDTH=1800
-SCREEN_HEIGHT=1000
-screen=pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-WHITE=(255, 255, 255)
-BLACK=(0, 0, 0)
-RED=(255, 0, 0)
-CELL_SIZE=50
-view_x=0
-view_y=0
-MOVE_SPEED=10
-clock=pygame.time.Clock()
-pole=[[0 for _ in range(SCREEN_HEIGHT // CELL_SIZE)] for _ in range(SCREEN_WIDTH // CELL_SIZE)]
-zvetlast=0
+def find_file(filename, search_path):
+    for root, dirs, files in os.walk(search_path):
+        if filename in files:
+            return os.path.join(root, filename)
+    return None
+filename="ads.py"
+file_path=find_file(filename, os.getcwd())
+images={
+    1:pygame.transform.scale(pygame.image.load('1.png'),(99,99)),
+    2:pygame.transform.scale(pygame.image.load('2.png'),(99,99)),
+    3:pygame.transform.scale(pygame.image.load('3.png'),(99,99)),
+    4:pygame.transform.scale(pygame.image.load('4.png'),(99,99)),
+    5:pygame.transform.scale(pygame.image.load('5.png'),(99,99)),
+    6:pygame.transform.scale(pygame.image.load('6.png'),(99,99)), 
+    7:pygame.transform.scale(pygame.image.load('7.png'),(99,99)), 
+    8:pygame.transform.scale(pygame.image.load('8.png'),(99,99)),
+    9:pygame.transform.scale(pygame.image.load('9.png'),(99,99)), 
+    10:pygame.transform.scale(pygame.image.load('10.png'),(99,99)),
+}
+def proverka(xn,yn):
+    if pole[yn][xn]==1:
+        Objekt3="Минотавр"
+    elif pole[yn][xn]==0:
+        Objekt3="Пустая клетка"
+    elif pole[yn][xn]==2:
+        Objekt3="Ключ"
+    elif pole[yn][xn]==3:
+        Objekt3="Выход"
+    elif pole[yn][xn]==4:
+        Objekt3="Начало Реки"
+    elif pole[yn][xn]==5:
+        Objekt3="Конец Реки"
+    elif pole[yn][xn]==6:
+        Objekt3="Река"
+    elif pole[yn][xn]==7:
+        Objekt3="Стена"
+    elif pole[yn][xn]==8:
+        Objekt3="Портал"
+    elif pole[yn][xn]==9:
+        Objekt3="Больница"
+    elif pole[yn][xn]==10:
+        Objekt3="Начало"
+    return Objekt3
+def run_infinite_field():
+    subprocess.run([sys.executable,file_path])
+def reca(xn,yn):
+        for h in range(len(rekax)):
+            if xn==rekax[h] and yn==rekay[h]:
+                nom=h
+        if naprav[nom]==1:
+            yn=yn-1
+        elif naprav[nom]==2:
+            yn=yn+1
+        elif naprav[nom]==3:
+            xn=xn-1
+        elif naprav[nom]==4:
+            xn=xn+1
+        return xn,yn
+def portal(xn,yn):
+    for h in range(len(portx)):
+        if xn==portx[h] and yn==porty[h]:
+            nom=h
+        nom=nom+1
+        if nom==len(portx):
+            nom=0
+        xn=portx[nom]
+        yn=porty[nom]
+        return xn,yn
+width=int(input())
+height=int(input())
+size=100
+Objekt2="Вы стоите в начале"
+Objekt3="Путую клетку"
+xn=-1
+yn=-1
+xb=0
+yb=0
+nom=0
+countb=0
+kluch=0
+nu=0
+m=True
+Igrok2=False
+a=(0,0,0)
+b=(255,255,255)
+disp=pygame.display.set_mode((1800,1000))
 Objekt=None
-running=True
-while running:
-    for event in pygame.event.get():
-        if event.type==pygame.QUIT:
-            running =False
-        elif event.type==pygame.MOUSEBUTTONDOWN and event.button==1:
-            cell_x=(event.pos[0]+view_x)//CELL_SIZE
-            cell_y=(event.pos[1]+view_y)//CELL_SIZE
-            if 0<=cell_x<len(pole) and 0<=cell_y< en(pole[0]):
-                pole[cell_x][cell_y] = zvetlast
-        elif event.type==pygame.KEYDOWN:
-            if event.key==pygame.K_1:
+zvetlast=0
+zvet=[]
+r=0
+x=[]
+y=[]
+portx=[]
+porty=[]
+rekax=[]
+rekay=[]
+naprav=[]
+napravi=0
+font = pygame.font.Font(None, 36)
+Cnopkagotovo="ГОЙДА"
+Paravila="1-Минотавр 2-Ключ 3-Выход 4-Начало реки 5-Конец реки"
+Paravila2="6-Река 7-Стена 8-Портал 9-Больница 0-Начало"
+### Задание поля #############################################################################################
+pole=[]
+for i in range(width//size):
+    pole.append([0]*(height//size))
+while m==True:
+###### Закрытие программы #####################################################################################
+    for c in pygame.event.get():
+        if c.type==pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+###############################################################################################################
+#######Отслеживание нажатие мыши###############################################################################
+        elif c.type == pygame.MOUSEBUTTONDOWN and c.button == 1:
+            if(1100<c.pos[0]<1300 and 650<c.pos[1]<750):
+                    m=False
+                    Igrok2=True
+            if c.pos[0]<width and c.pos[1]<height and zvetlast!=0:
+                r=1
+                x.append(c.pos[0])
+                y.append(c.pos[1])
+                zvet.append(zvetlast)
+                pole[(c.pos[1]//100)][(c.pos[0]//100)]=zvetlast
+                if zvetlast==10 and xn==-1 and yn==-1:
+                    xn=c.pos[0]//100
+                    yn=c.pos[1]//100
+                elif zvetlast==9 and countb==0:
+                    xb=c.pos[0]//100
+                    yb=c.pos[1]//100
+                    countb=1
+                elif zvetlast==2:
+                    nu=nu+1
+                elif zvetlast==8:
+                    portx.append(c.pos[0]//100)
+                    porty.append(c.pos[1]//100)
+                elif zvetlast==4:
+                    rekax.append(c.pos[0]//100)
+                    rekay.append(c.pos[1]//100)
+                    napravi=1
+                    while napravi==1:
+                        for k in pygame.event.get():
+                            if k.type==pygame.KEYDOWN:
+                                if k.key==pygame.K_UP:
+                                   naprav.append(1)
+                                   napravi=0
+                                elif k.key==pygame.K_DOWN:
+                                   naprav.append(2)
+                                   napravi=0
+                                elif k.key==pygame.K_LEFT:
+                                    naprav.append(3)
+                                    napravi=0
+                                elif k.key==pygame.K_RIGHT:
+                                    naprav.append(4)
+                                    napravi=0
+                elif zvetlast==6:
+                    rekax.append(c.pos[0]//100)
+                    rekay.append(c.pos[1]//100)
+                    napravi=1
+                    while napravi==1:
+                        for k in pygame.event.get():
+                            if k.type==pygame.KEYDOWN:
+                                if k.key==pygame.K_UP:
+                                   naprav.append(1)
+                                   napravi=0
+                                elif k.key==pygame.K_DOWN:
+                                   naprav.append(2)
+                                   napravi=0
+                                elif k.key==pygame.K_LEFT:
+                                    naprav.append(3)
+                                    napravi=0
+                                elif k.key==pygame.K_RIGHT:
+                                    naprav.append(4)
+                                    napravi=0
+###############################################################################################################
+######## Проверка последней нажатой цифры #####################################################################
+        if c.type==pygame.KEYDOWN:
+            if c.key==pygame.K_1:
                 zvetlast=1
                 Objekt="Минотавр"
-            elif event.key==pygame.K_2:
+            elif c.key==pygame.K_2:
                 zvetlast=2
-                Objekt="Ключ"
-            elif event.key==pygame.K_3:
+                Objekt= "Ключ"
+            elif c.key==pygame.K_3:
                 zvetlast=3
-                Objekt = "Выход"
-            elif event.key==pygame.K_4:
+                Objekt= "Выход"
+            elif c.key==pygame.K_4:
                 zvetlast=4
                 Objekt="Начало Реки"
-            elif event.key==pygame.K_5:
+            elif c.key==pygame.K_5:
                 zvetlast=5
                 Objekt="Конец Реки"
-            elif event.key==pygame.K_6:
+            elif c.key==pygame.K_6:
                 zvetlast=6
                 Objekt="Река"
-            elif event.key==pygame.K_7:
+            elif c.key==pygame.K_7:
                 zvetlast=7
                 Objekt="Стена"
-            elif event.key==pygame.K_8:
+            elif c.key==pygame.K_8:
                 zvetlast=8
                 Objekt="Портал"
-            elif event.key==pygame.K_9:
+            elif c.key==pygame.K_9:
                 zvetlast=9
                 Objekt="Больница"
-            elif event.key==pygame.K_0:
+            elif c.key==pygame.K_0:
                 zvetlast=10
-                Objekt="Начало"
-    keys=pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
-        view_x-=MOVE_SPEED
-    if keys[pygame.K_RIGHT]:
-        view_x+=MOVE_SPEED
-    if keys[pygame.K_UP]:
-        view_y-=MOVE_SPEED
-    if keys[pygame.K_DOWN]:
-        view_y+=MOVE_SPEED
-    if view_x<0:
-        view_x+=MOVE_SPEED
-    if view_y<0:
-        view_y+=MOVE_SPEED
-    screen.fill(WHITE)
-    start_x=view_x//CELL_SIZE
-    start_y=view_y//CELL_SIZE
-    end_x=(view_x+SCREEN_WIDTH)//CELL_SIZE+1
-    end_y=(view_y+SCREEN_HEIGHT)//CELL_SIZE+1
-    for i in range(start_x, end_x):
-        for j in range(start_y, end_y):
-            screen_x=i*CELL_SIZE-view_x
-            screen_y=j*CELL_SIZE-view_y
-            pygame.draw.rect(screen,BLACK,(screen_x,screen_y,CELL_SIZE,CELL_SIZE),1)
-            if i==0 and j==0:
-                pygame.draw.rect(screen,RED,(screen_x,screen_y,CELL_SIZE,CELL_SIZE))
-    for i in range(len(pole)):
-        for j in range(len(pole[i])):
-            if pole[i][j]!=0:
-                screen_x=i*CELL_SIZE-view_x
-                screen_y =j*CELL_SIZE-view_y
-                color = (20*pole[i][j],10*pole[i][j],4*pole[i][j])
-                pygame.draw.rect(screen,color,(screen_x,screen_y,CELL_SIZE,CELL_SIZE))
+                Objekt= "Начало"
+###############################################################################################################
+#########Отрисовка#############################################################################################
+    disp.fill(b)
+    for row in range(height//size):
+        for col in range(width//size):
+            pygame.draw.rect(disp,a,(col*size,row*size,size,size),1)
+    for i in range(len(x)):
+        if zvetlast!=0 and r!=0:
+            disp.blit(images[zvet[i]],(x[i]//100*100,y[i]//100*100))
     if Objekt is not None:
-        font=pygame.font.Font(None, 36)
-        text=font.render(Objekt,True,BLACK)
-        screen.blit(text,(10, 10))
+        text=font.render(Objekt,True,a)
+        text_rect=text.get_rect(center=(1300,500))
+        disp.blit(text,text_rect)
+    text=font.render(Paravila,True,a)
+    text_rect=text.get_rect(center=(1300,550))
+    disp.blit(text,text_rect)
+    text=font.render(Paravila2,True,a)
+    text_rect=text.get_rect(center=(1300,600))
+    disp.blit(text,text_rect)
+    text=font.render(Cnopkagotovo,True,a)
+    text_rect=text.get_rect(center=(1300,700))
+    disp.blit(text,text_rect)
     pygame.display.flip()
-    clock.tick(120)
-pygame.quit()
-sys.exit()
+############################################################################################################
+pole2=[]
+for i in range(width//size):
+    pole2.append([0]*(height//size))
+while Igrok2==True:
+    disp.fill(b)
+    for c in pygame.event.get():
+        if c.type==pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if c.type == pygame.MOUSEBUTTONDOWN and c.button == 1:
+            if(1100<c.pos[0]<1300 and 650<c.pos[1]<850):
+                threading.Thread(target=run_infinite_field).start()
+        if c.type==pygame.KEYDOWN:
+            if c.key==pygame.K_UP:   
+                yn=yn-1  
+                if yn<0:
+                    Objekt3="Стена"
+                else:
+                    Objekt3=proverka(xn,yn)
+                Objekt2=f"Вы сдвинулись на клетку вверх и встретили {Objekt3}"
+                if Objekt3=="Стена":
+                    yn=yn+1
+                elif Objekt3=="Минотавр":
+                    yn=yb
+                    xn=xb
+                elif Objekt3=="Ключ":
+                    kluch=kluch+1
+                    pole[yn][xn]=0
+                elif Objekt3=="Выход" and kluch==nu:
+                    Objekt2="Вы победили!"
+                elif Objekt3=="Портал":
+                    xn,yn=portal(xn,yn)
+                elif Objekt3=="Начало Реки":
+                   xn,yn=reca(xn,yn)
+                elif Objekt3=="Река":
+                    xn,yn=reca(xn,yn)
+            elif c.key==pygame.K_DOWN:
+                yn=yn+1
+                if yn==height//100:
+                    Objekt3="Стена"
+                else:
+                    Objekt3=proverka(xn,yn)
+                Objekt2=f"Вы сдвинулись на клетку вниз и встретили {Objekt3}"
+                if Objekt3=="Стена":
+                    yn=yn-1
+                elif Objekt3=="Минотавр":
+                    yn=yb
+                    xn=xb
+                elif Objekt3=="Ключ":
+                    kluch=kluch+1
+                    pole[yn][xn]=0
+                elif Objekt3=="Выход" and kluch==nu:
+                    Objekt2="Вы победили!"
+                elif Objekt3=="Портал":
+                    xn,yn=portal(xn,yn)
+                elif Objekt3=="Начало Реки":
+                    xn,yn=reca(xn,yn)
+                elif Objekt3=="Река":
+                    xn,yn=reca(xn,yn)
+            elif c.key==pygame.K_LEFT:
+                xn=xn-1
+                if xn<0:
+                    Objekt3="Стена"
+                else:
+                    Objekt3=proverka(xn,yn)
+                Objekt2=f"Вы сдвинулись на клетку влево и встретили {Objekt3}"
+                if Objekt3=="Стена":
+                    xn=xn+1
+                elif Objekt3=="Минотавр":
+                    yn=yb
+                    xn=xb
+                elif Objekt3=="Ключ":
+                    kluch=kluch+1
+                    pole[yn][xn]=0
+                elif Objekt3=="Выход" and kluch==nu:
+                    Objekt2="Вы победили!"
+                elif Objekt3=="Портал":
+                    xn,yn=portal(xn,yn)
+                elif Objekt3=="Начало Реки":
+                    xn,yn=reca(xn,yn)
+                elif Objekt3=="Река":
+                    xn,yn=reca(xn,yn)
+            elif c.key==pygame.K_RIGHT:
+                xn=xn+1
+                if xn==width//100:
+                    Objekt3="Стена"
+                else:
+                    Objekt3=proverka(xn,yn)
+                Objekt2=f"Вы сдвинулись на клетку вправо и встретили {Objekt3}"
+                if Objekt3=="Стена":
+                    xn=xn-1
+                elif Objekt3=="Минотавр":
+                    yn=yb
+                    xn=xb
+                elif Objekt3=="Ключ":
+                    kluch=kluch+1
+                    pole[yn][xn]=0
+                elif Objekt3=="Выход" and kluch==nu:
+                    Objekt2="Вы победили!"
+                elif Objekt3=="Портал":
+                    xn,yn=portal(xn,yn)
+                elif Objekt3=="Начало Реки":
+                    xn,yn=reca(xn,yn)
+                elif Objekt3=="Река":
+                    xn,yn=reca(xn,yn)
+    text=font.render(Objekt2,True,a)
+    text_rect=text.get_rect(center=(1300,500))
+    disp.blit(text,text_rect)
+    pygame.draw.rect(disp,a,(1100,650,200,200),1)
+    pygame.display.flip()
+    pygame.display.flip()
