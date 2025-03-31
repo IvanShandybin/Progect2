@@ -58,18 +58,6 @@ def reca(xn,yn):
         elif naprav[nom]==4:
             xn=xn+1
         return xn,yn
-def portal(xn,yn):
-    for h in range(len(portx)):
-        if xn==portx[h] and yn==porty[h]:
-            nom=h
-        nom=nom+1
-        if nom==len(portx):
-            nom=0
-        xn=portx[nom]
-        yn=porty[nom]
-        return xn,yn
-width=int(input())
-height=int(input())
 size=100
 Objekt2="Вы стоите в начале"
 Objekt3="Путую клетку"
@@ -81,7 +69,7 @@ nom=0
 countb=0
 kluch=0
 nu=0
-m=True
+m=False
 Igrok2=False
 a=(0,0,0)
 b=(255,255,255)
@@ -98,12 +86,70 @@ rekax=[]
 rekay=[]
 naprav=[]
 napravi=0
-font = pygame.font.Font(None, 36)
+font=pygame.font.Font(None,36)
 Cnopkagotovo="ГОЙДА"
 Paravila="1-Минотавр 2-Ключ 3-Выход 4-Начало реки 5-Конец реки"
 Paravila2="6-Река 7-Стена 8-Портал 9-Больница 0-Начало"
-### Задание поля #############################################################################################
+Vbor="Введите размеры поля от 5 до 9"
+g=True
 pole=[]
+razmer1=0
+razmer2=0
+width=500
+height=500
+wi=0
+while g==True:
+    for c in pygame.event.get():
+        if c.type==pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif c.type == pygame.MOUSEBUTTONDOWN and c.button == 1:
+            if(700<c.pos[0]<1100 and 850<c.pos[1]<950):
+                    m=True
+                    g=False
+        elif c.type==pygame.KEYDOWN:
+            if wi==0:
+                if c.key==pygame.K_5:
+                    width=500
+                    wi=1
+                elif c.key==pygame.K_6:
+                    width=600
+                    wi=1
+                elif c.key==pygame.K_7:
+                    width=700
+                    wi=1
+                elif c.key==pygame.K_8:
+                    width=800
+                    wi=1
+                elif c.key==pygame.K_9:
+                    width=900
+                    wi=1
+            else:
+                if c.key==pygame.K_5:
+                    height=500
+                elif c.key==pygame.K_6:
+                    height=600
+                elif c.key==pygame.K_7:
+                    height=700
+                elif c.key==pygame.K_8:
+                    height=800
+                elif c.key==pygame.K_9:
+                    height=900
+            if c.key==pygame.K_BACKSPACE:
+                wi=0
+    Vborw=f"{width//100}x{height//100}"
+    disp.fill(b)
+    text=font.render(Vborw,True,a)
+    text_rect=text.get_rect(center=(900,700))
+    disp.blit(text,text_rect)
+    text=font.render(Vbor,True,a)
+    text_rect=text.get_rect(center=(900,500))
+    disp.blit(text,text_rect)
+    text=font.render(Cnopkagotovo,True,a)
+    text_rect=text.get_rect(center=(900,900))
+    disp.blit(text,text_rect)
+    pygame.display.flip()
+### Задание поля #############################################################################################
 for i in range(width//size):
     pole.append([0]*(height//size))
 while m==True:
@@ -262,7 +308,14 @@ while Igrok2==True:
                 elif Objekt3=="Выход" and kluch==nu:
                     Objekt2="Вы победили!"
                 elif Objekt3=="Портал":
-                    xn,yn=portal(xn,yn)
+                    for h in range(len(portx)):
+                        if xn==portx[h] and yn==porty[h]:
+                            nom=h
+                            nom=nom+1
+                        if nom==len(portx):
+                            nom=0
+                    xn=portx[nom]
+                    yn=porty[nom]
                 elif Objekt3=="Начало Реки":
                    xn,yn=reca(xn,yn)
                 elif Objekt3=="Река":
@@ -285,7 +338,14 @@ while Igrok2==True:
                 elif Objekt3=="Выход" and kluch==nu:
                     Objekt2="Вы победили!"
                 elif Objekt3=="Портал":
-                    xn,yn=portal(xn,yn)
+                    for h in range(len(portx)):
+                        if xn==portx[h] and yn==porty[h]:
+                            nom=h
+                            nom=nom+1
+                        if nom==len(portx):
+                            nom=0
+                    xn=portx[nom]
+                    yn=porty[nom]
                 elif Objekt3=="Начало Реки":
                     xn,yn=reca(xn,yn)
                 elif Objekt3=="Река":
@@ -308,7 +368,14 @@ while Igrok2==True:
                 elif Objekt3=="Выход" and kluch==nu:
                     Objekt2="Вы победили!"
                 elif Objekt3=="Портал":
-                    xn,yn=portal(xn,yn)
+                    for h in range(len(portx)):
+                        if xn==portx[h] and yn==porty[h]:
+                            nom=h
+                            nom=nom+1
+                        if nom==len(portx):
+                            nom=0
+                    xn=portx[nom]
+                    yn=porty[nom]
                 elif Objekt3=="Начало Реки":
                     xn,yn=reca(xn,yn)
                 elif Objekt3=="Река":
@@ -331,7 +398,14 @@ while Igrok2==True:
                 elif Objekt3=="Выход" and kluch==nu:
                     Objekt2="Вы победили!"
                 elif Objekt3=="Портал":
-                    xn,yn=portal(xn,yn)
+                    for h in range(len(portx)):
+                        if xn==portx[h] and yn==porty[h]:
+                            nom=h
+                            nom=nom+1
+                        if nom==len(portx):
+                            nom=0
+                    xn=portx[nom]
+                    yn=porty[nom]
                 elif Objekt3=="Начало Реки":
                     xn,yn=reca(xn,yn)
                 elif Objekt3=="Река":
@@ -340,13 +414,8 @@ while Igrok2==True:
     text_rect=text.get_rect(center=(1300,500))
     disp.blit(text,text_rect)
     pygame.draw.rect(disp,a,(1100,650,200,200),1)
-    print(pole)
     print(yn)
     print(xn)
-    print(nom)
-    print(rekax)
-    print(rekay)
-    print(naprav)
     pygame.display.flip()
     print(rekay)
     print(naprav)
