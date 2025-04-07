@@ -1,12 +1,4 @@
-# Импорт необходимых библиотек
-import pygame  # Для создания графического интерфейса
-import sys  # Для работы с системными функциями
-import subprocess  # Для запуска внешних процессов
-import threading  # Для многопоточности
-import os  # Для работы с файловой системой
-
-
-# Инициализация pygame (создание игрового движка)
+import pygame,os,sys,subprocess,threading
 pygame.init()
 
 
