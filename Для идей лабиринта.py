@@ -1,422 +1,532 @@
-import pygame,sys,subprocess,threading,os
+# Импорт необходимых библиотек
+import pygame  # Для создания графического интерфейса
+import sys  # Для работы с системными функциями
+import subprocess  # Для запуска внешних процессов
+import threading  # Для многопоточности
+import os  # Для работы с файловой системой
+
+
+# Инициализация pygame (создание игрового движка)
 pygame.init()
+
+
 def find_file(filename, search_path):
+    """
+    Поиск файла в указанной директории и всех поддиректориях.
+    Возвращает полный путь к файлу или None, если файл не найден.
+    """
     for root, dirs, files in os.walk(search_path):
         if filename in files:
             return os.path.join(root, filename)
     return None
-filename="ads.py"
-file_path=find_file(filename, os.getcwd())
-images={
-    1:pygame.transform.scale(pygame.image.load('1.png'), (100, 100)),
-    2:pygame.transform.scale(pygame.image.load('2.png'), (100, 100)),
-    3:pygame.transform.scale(pygame.image.load('3.png'), (100, 100)),
-    4:pygame.transform.scale(pygame.image.load('4.png'), (100, 100)),
-    5:pygame.transform.scale(pygame.image.load('5.png'), (100, 100)),
-    6:pygame.transform.scale(pygame.image.load('6.png'), (100, 100)), 
-    7:pygame.transform.scale(pygame.image.load('7.png'), (100, 100)), 
-    8:pygame.transform.scale(pygame.image.load('8.png'), (100, 100)),
-    9:pygame.transform.scale(pygame.image.load('9.png'), (100, 100)), 
-    10:pygame.transform.scale(pygame.image.load('10.png'), (100, 100)),
-}
-def proverka(xn,yn):
-    if pole[yn][xn]==1:
-        Objekt3="Минотавр"
-    elif pole[yn][xn]==0:
-        Objekt3="Пустая клетка"
-    elif pole[yn][xn]==2:
-        Objekt3="Ключ"
-    elif pole[yn][xn]==3:
-        Objekt3="Выход"
-    elif pole[yn][xn]==4:
-        Objekt3="Начало Реки"
-    elif pole[yn][xn]==5:
-        Objekt3="Конец Реки"
-    elif pole[yn][xn]==6:
-        Objekt3="Река"
-    elif pole[yn][xn]==7:
-        Objekt3="Стена"
-    elif pole[yn][xn]==8:
-        Objekt3="Портал"
-    elif pole[yn][xn]==9:
-        Objekt3="Больница"
-    elif pole[yn][xn]==10:
-        Objekt3="Начало"
-    return Objekt3
+
+
 def run_infinite_field():
-    subprocess.run([sys.executable,file_path])
-def reca(xn,yn):
-        for h in range(len(rekax)):
-            if xn==rekax[h] and yn==rekay[h]:
-                nom=h
-        if naprav[nom]==1:
-            yn=yn-1
-        elif naprav[nom]==2:
-            yn=yn+1
-        elif naprav[nom]==3:
-            xn=xn-1
-        elif naprav[nom]==4:
-            xn=xn+1
-        return xn,yn
-size=100
-Objekt2="Вы стоите в начале"
-Objekt3="Путую клетку"
-xn=-1
-yn=-1
-xb=0
-yb=0
-nom=0
-countb=0
-kluch=0
-nu=0
-m=False
-Igrok2=False
-a=(0,0,0)
-b=(255,255,255)
-disp=pygame.display.set_mode((1800,1000))
-Objekt=None
-zvetlast=0
-zvet=[]
-r=0
-x=[]
-y=[]
-portx=[]
-porty=[]
-rekax=[]
-rekay=[]
-naprav=[]
-napravi=0
-font=pygame.font.Font(None,36)
-Cnopkagotovo="ГОЙДА"
-Paravila="1-Минотавр 2-Ключ 3-Выход 4-Начало реки 5-Конец реки"
-Paravila2="6-Река 7-Стена 8-Портал 9-Больница 0-Начало"
-Vbor="Введите размеры поля от 5 до 9"
-g=True
-pole=[]
-razmer1=0
-razmer2=0
-width=500
-height=500
-wi=0
-while g==True:
-    for c in pygame.event.get():
-        if c.type==pygame.QUIT:
+    """Запуск бесконечного режима игры в отдельном процессе."""
+    subprocess.run([sys.executable, file_path])
+
+
+def check_cell(x, y):
+    """
+    Проверка содержимого клетки поля по координатам (x,y).
+    Возвращает текстовое описание объекта в клетке.
+    """
+    cell_content = field[y][x]
+    if cell_content == 1:
+        return "Минотавр"
+    elif cell_content == 0:
+        return "Пустая клетка"
+    elif cell_content == 2:
+        return "Ключ"
+    elif cell_content == 3:
+        return "Выход"
+    elif cell_content == 4:
+        return "Начало Реки"
+    elif cell_content == 5:
+        return "Конец Реки"
+    elif cell_content == 6:
+        return "Река"
+    elif cell_content == 7:
+        return "Стена"
+    elif cell_content == 8:
+        return "Портал"
+    elif cell_content == 9:
+        return "Больница"
+    elif cell_content == 10:
+        return "Начало"
+    return "Неизвестный объект"
+
+
+def river_flow(x, y):
+    """
+    Обработка течения реки. Определяет новую позицию при движении по реке.
+    Возвращает новые координаты (x,y).
+    """
+    # Находим индекс текущей клетки реки
+    for i in range(len(river_x)):
+        if x == river_x[i] and y == river_y[i]:
+            index = i
+    
+    # Меняем координаты в зависимости от направления течения
+    if direction[index] == 1:  # Течение вверх
+        y -= 1
+    elif direction[index] == 2:  # Течение вниз
+        y += 1
+    elif direction[index] == 3:  # Течение влево
+        x -= 1
+    elif direction[index] == 4:  # Течение вправо
+        x += 1
+    
+    return x, y
+
+
+# ========== КОНСТАНТЫ ИГРЫ ==========
+SIZE = 100  # Размер одной клетки поля в пикселях
+BLACK = (0, 0, 0)  # Цвет черный (RGB)
+WHITE = (255, 255, 255)  # Цвет белый (RGB)
+DONE_BUTTON_TEXT = "ГОЙДА"  # Текст на кнопке подтверждения
+RULES1 = "1-Минотавр 2-Ключ 3-Выход 4-Начало реки 5-Конец реки"  # Правила игры часть 1
+RULES2 = "6-Река 7-Стена 8-Портал 9-Больница 0-Начало"  # Правила игры часть 2
+SIZE_PROMPT = "Введите размеры поля от 5 до 9"  # Подсказка при выборе размера поля
+
+# ========== ИНИЦИАЛИЗАЦИЯ ПЕРЕМЕННЫХ ==========
+filename = "ads.py"  # Имя файла для бесконечного режима
+file_path = find_file(filename, os.getcwd())  # Поиск пути к файлу
+
+# Загрузка и подготовка изображений для объектов
+images = {
+    1: pygame.transform.scale(pygame.image.load('1.png'), (SIZE, SIZE)),
+    2: pygame.transform.scale(pygame.image.load('2.png'), (SIZE, SIZE)),
+    3: pygame.transform.scale(pygame.image.load('3.png'), (SIZE, SIZE)),
+    4: pygame.transform.scale(pygame.image.load('4.png'), (SIZE, SIZE)),
+    5: pygame.transform.scale(pygame.image.load('5.png'), (SIZE, SIZE)),
+    6: pygame.transform.scale(pygame.image.load('6.png'), (SIZE, SIZE)),
+    7: pygame.transform.scale(pygame.image.load('7.png'), (SIZE, SIZE)),
+    8: pygame.transform.scale(pygame.image.load('8.png'), (SIZE, SIZE)),
+    9: pygame.transform.scale(pygame.image.load('9.png'), (SIZE, SIZE)),
+    10: pygame.transform.scale(pygame.image.load('10.png'), (SIZE, SIZE)),
+}
+
+# Переменные состояния игрока
+player_status = "Вы стоите в начале"  # Текущий статус игрока
+cell_description = "Пустую клетку"  # Описание текущей клетки
+player_x = -1  # Позиция игрока по X (начальное значение -1 означает не установлено)
+player_y = -1  # Позиция игрока по Y
+hospital_x = 0  # X-координата больницы
+hospital_y = 0  # Y-координата больницы
+current_index = 0  # Текущий индекс для работы с массивами
+hospital_count = 0  # Счетчик больниц на карте
+keys_collected = 0  # Количество собранных ключей
+keys_total = 0  # Общее количество ключей на карте
+map_ready = False  # Флаг готовности карты
+player_mode = False  # Флаг режима игры (False - редактор, True - игровой режим)
+
+# Настройки отображения
+display = pygame.display.set_mode((1800, 1000))  # Создание окна 1800x1000
+current_object = None  # Текущий выбранный объект для размещения
+last_color = 0  # Код последнего выбранного объекта
+colors = []  # Список кодов объектов на поле
+river_flow_active = 0  # Флаг активности течения реки
+click_x = []  # Список X-координат размещенных объектов
+click_y = []  # Список Y-координат размещенных объектов
+portal_x = []  # Список X-координат порталов
+portal_y = []  # Список Y-координат порталов
+river_x = []  # Список X-координат рек
+river_y = []  # Список Y-координат рек
+direction = []  # Список направлений течения рек
+current_direction = 0  # Текущее направление для новой реки
+
+# Настройка шрифта для текста
+font = pygame.font.Font(None, 36)
+
+# Инициализация игрового поля
+field = []  # Основное игровое поле
+width_input = 0  # Ввод ширины поля
+height_input = 0  # Ввод высоты поля
+field_width = 500  # Ширина поля по умолчанию (5 клеток)
+field_height = 500  # Высота поля по умолчанию (5 клеток)
+width_set = 0  # Флаг установки ширины (0 - не установлена)
+
+# ========== ЭТАП 1: ВЫБОР РАЗМЕРА ПОЛЯ ==========
+selecting_size = True
+while selecting_size:
+    # Обработка событий
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        elif c.type == pygame.MOUSEBUTTONDOWN and c.button == 1:
-            if(700<c.pos[0]<1100 and 850<c.pos[1]<950):
-                    m=True
-                    g=False
-        elif c.type==pygame.KEYDOWN:
-            if wi==0:
-                if c.key==pygame.K_5:
-                    width=500
-                    wi=1
-                elif c.key==pygame.K_6:
-                    width=600
-                    wi=1
-                elif c.key==pygame.K_7:
-                    width=700
-                    wi=1
-                elif c.key==pygame.K_8:
-                    width=800
-                    wi=1
-                elif c.key==pygame.K_9:
-                    width=900
-                    wi=1
-            else:
-                if c.key==pygame.K_5:
-                    height=500
-                elif c.key==pygame.K_6:
-                    height=600
-                elif c.key==pygame.K_7:
-                    height=700
-                elif c.key==pygame.K_8:
-                    height=800
-                elif c.key==pygame.K_9:
-                    height=900
-            if c.key==pygame.K_BACKSPACE:
-                wi=0
-    Vborw=f"{width//100}x{height//100}"
-    disp.fill(b)
-    text=font.render(Vborw,True,a)
-    text_rect=text.get_rect(center=(900,700))
-    disp.blit(text,text_rect)
-    text=font.render(Vbor,True,a)
-    text_rect=text.get_rect(center=(900,500))
-    disp.blit(text,text_rect)
-    text=font.render(Cnopkagotovo,True,a)
-    text_rect=text.get_rect(center=(900,900))
-    disp.blit(text,text_rect)
-    pygame.display.flip()
-### Задание поля #############################################################################################
-for i in range(width//size):
-    pole.append([0]*(height//size))
-while m==True:
-###### Закрытие программы #####################################################################################
-    for c in pygame.event.get():
-        if c.type==pygame.QUIT:
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            # Проверка нажатия на кнопку "ГОЙДА"
+            if 700 < event.pos[0] < 1100 and 850 < event.pos[1] < 950:
+                map_ready = True
+                selecting_size = False
+        elif event.type == pygame.KEYDOWN:
+            # Обработка ввода цифр для выбора размера
+            if width_set == 0:  # Если ширина еще не выбрана
+                if event.key == pygame.K_5:
+                    field_width = 500
+                    width_set = 1
+                elif event.key == pygame.K_6:
+                    field_width = 600
+                    width_set = 1
+                elif event.key == pygame.K_7:
+                    field_width = 700
+                    width_set = 1
+                elif event.key == pygame.K_8:
+                    field_width = 800
+                    width_set = 1
+                elif event.key == pygame.K_9:
+                    field_width = 900
+                    width_set = 1
+            else:  # Если ширина выбрана, выбираем высоту
+                if event.key == pygame.K_5:
+                    field_height = 500
+                elif event.key == pygame.K_6:
+                    field_height = 600
+                elif event.key == pygame.K_7:
+                    field_height = 700
+                elif event.key == pygame.K_8:
+                    field_height = 800
+                elif event.key == pygame.K_9:
+                    field_height = 900
+            
+            # Обработка backspace для сброса выбора
+            if event.key == pygame.K_BACKSPACE:
+                width_set = 0
+
+    # Отображение интерфейса выбора размера
+    size_display = f"{field_width//100}x{field_height//100}"  # Формат "5x5"
+    display.fill(WHITE)  # Очистка экрана
+    
+    # Отображение текущего размера
+    text = font.render(size_display, True, BLACK)
+    text_rect = text.get_rect(center=(900, 700))
+    display.blit(text, text_rect)
+    
+    # Отображение подсказки
+    text = font.render(SIZE_PROMPT, True, BLACK)
+    text_rect = text.get_rect(center=(900, 500))
+    display.blit(text, text_rect)
+    
+    # Отображение кнопки
+    text = font.render(DONE_BUTTON_TEXT, True, BLACK)
+    text_rect = text.get_rect(center=(900, 900))
+    display.blit(text, text_rect)
+    
+    pygame.display.flip()  # Обновление экрана
+
+# Создание пустого поля выбранного размера
+for i in range(field_width // SIZE):
+    field.append([0] * (field_height // SIZE))
+
+# ========== ЭТАП 2: РЕДАКТОР КАРТЫ ==========
+while map_ready:
+    # Обработка событий
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-###############################################################################################################
-#######Отслеживание нажатие мыши###############################################################################
-        elif c.type == pygame.MOUSEBUTTONDOWN and c.button == 1:
-            if(1100<c.pos[0]<1300 and 650<c.pos[1]<750):
-                    m=False
-                    Igrok2=True
-            if c.pos[0]<width and c.pos[1]<height and zvetlast!=0:
-                r=1
-                x.append(c.pos[0])
-                y.append(c.pos[1])
-                zvet.append(zvetlast)
-                pole[(c.pos[1]//100)][(c.pos[0]//100)]=zvetlast
-                if zvetlast==10 and xn==-1 and yn==-1:
-                    xn=c.pos[0]//100
-                    yn=c.pos[1]//100
-                elif zvetlast==9 and countb==0:
-                    xb=c.pos[0]//100
-                    yb=c.pos[1]//100
-                    countb=1
-                elif zvetlast==2:
-                    nu=nu+1
-                elif zvetlast==8:
-                    portx.append(c.pos[0]//100)
-                    porty.append(c.pos[1]//100)
-                elif zvetlast==4:
-                    rekax.append(c.pos[0]//100)
-                    rekay.append(c.pos[1]//100)
-                    napravi=1
-                    while napravi==1:
-                        for k in pygame.event.get():
-                            if k.type==pygame.KEYDOWN:
-                                if k.key==pygame.K_UP:
-                                   naprav.append(1)
-                                   napravi=0
-                                elif k.key==pygame.K_DOWN:
-                                   naprav.append(2)
-                                   napravi=0
-                                elif k.key==pygame.K_LEFT:
-                                    naprav.append(3)
-                                    napravi=0
-                                elif k.key==pygame.K_RIGHT:
-                                    naprav.append(4)
-                                    napravi=0
-                elif zvetlast==6:
-                    rekax.append(c.pos[0]//100)
-                    rekay.append(c.pos[1]//100)
-                    napravi=1
-                    while napravi==1:
-                        for k in pygame.event.get():
-                            if k.type==pygame.KEYDOWN:
-                                if k.key==pygame.K_UP:
-                                   naprav.append(1)
-                                   napravi=0
-                                elif k.key==pygame.K_DOWN:
-                                   naprav.append(2)
-                                   napravi=0
-                                elif k.key==pygame.K_LEFT:
-                                    naprav.append(3)
-                                    napravi=0
-                                elif k.key==pygame.K_RIGHT:
-                                    naprav.append(4)
-                                    napravi=0
-###############################################################################################################
-######## Проверка последней нажатой цифры #####################################################################
-        if c.type==pygame.KEYDOWN:
-            if c.key==pygame.K_1:
-                zvetlast=1
-                Objekt="Минотавр"
-            elif c.key==pygame.K_2:
-                zvetlast=2
-                Objekt= "Ключ"
-            elif c.key==pygame.K_3:
-                zvetlast=3
-                Objekt= "Выход"
-            elif c.key==pygame.K_4:
-                zvetlast=4
-                Objekt="Начало Реки"
-            elif c.key==pygame.K_5:
-                zvetlast=5
-                Objekt="Конец Реки"
-            elif c.key==pygame.K_6:
-                zvetlast=6
-                Objekt="Река"
-            elif c.key==pygame.K_7:
-                zvetlast=7
-                Objekt="Стена"
-            elif c.key==pygame.K_8:
-                zvetlast=8
-                Objekt="Портал"
-            elif c.key==pygame.K_9:
-                zvetlast=9
-                Objekt="Больница"
-            elif c.key==pygame.K_0:
-                zvetlast=10
-                Objekt= "Начало"
-###############################################################################################################
-#########Отрисовка#############################################################################################
-    disp.fill(b)
-    for row in range(height//size):
-        for col in range(width//size):
-            pygame.draw.rect(disp,a,(col*size,row*size,size,size),1)
-    for i in range(len(x)):
-        if zvetlast!=0 and r!=0:
-            disp.blit(images[zvet[i]],(x[i]//100*100,y[i]//100*100))
-    if Objekt is not None:
-        text=font.render(Objekt,True,a)
-        text_rect=text.get_rect(center=(1300,500))
-        disp.blit(text,text_rect)
-    text=font.render(Paravila,True,a)
-    text_rect=text.get_rect(center=(1300,550))
-    disp.blit(text,text_rect)
-    text=font.render(Paravila2,True,a)
-    text_rect=text.get_rect(center=(1300,600))
-    disp.blit(text,text_rect)
-    text=font.render(Cnopkagotovo,True,a)
-    text_rect=text.get_rect(center=(1300,700))
-    disp.blit(text,text_rect)
-    pygame.display.flip()
-############################################################################################################
-pole2=[]
-for i in range(width//size):
-    pole2.append([0]*(height//size))
-while Igrok2==True:
-    disp.fill(b)
-    for c in pygame.event.get():
-        if c.type==pygame.QUIT:
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            # Проверка нажатия на кнопку завершения редактирования
+            if 1100 < event.pos[0] < 1300 and 650 < event.pos[1] < 750:
+                map_ready = False
+                player_mode = True
+            
+            # Размещение объектов на поле
+            if (event.pos[0] < field_width and event.pos[1] < field_height 
+                    and last_color != 0):
+                river_flow_active = 1
+                click_x.append(event.pos[0])
+                click_y.append(event.pos[1])
+                colors.append(last_color)
+                field[(event.pos[1] // 100)][(event.pos[0] // 100)] = last_color
+                
+                # Особые обработки для разных объектов:
+                # 1. Начальная позиция игрока
+                if last_color == 10 and player_x == -1 and player_y == -1:
+                    player_x = event.pos[0] // 100
+                    player_y = event.pos[1] // 100
+                
+                # 2. Больница (может быть только одна)
+                elif last_color == 9 and hospital_count == 0:
+                    hospital_x = event.pos[0] // 100
+                    hospital_y = event.pos[1] // 100
+                    hospital_count = 1
+                
+                # 3. Ключи (считаем количество)
+                elif last_color == 2:
+                    keys_total += 1
+                
+                # 4. Портал (добавляем координаты)
+                elif last_color == 8:
+                    portal_x.append(event.pos[0] // 100)
+                    portal_y.append(event.pos[1] // 100)
+                
+                # 5. Река (начало или течение)
+                elif last_color == 4 or last_color == 6:
+                    river_x.append(event.pos[0] // 100)
+                    river_y.append(event.pos[1] // 100)
+                    current_direction = 1
+                    
+                    # Выбор направления течения реки
+                    while current_direction == 1:
+                        for key_event in pygame.event.get():
+                            if key_event.type == pygame.KEYDOWN:
+                                if key_event.key == pygame.K_UP:
+                                    direction.append(1)  # Вверх
+                                    current_direction = 0
+                                elif key_event.key == pygame.K_DOWN:
+                                    direction.append(2)  # Вниз
+                                    current_direction = 0
+                                elif key_event.key == pygame.K_LEFT:
+                                    direction.append(3)  # Влево
+                                    current_direction = 0
+                                elif key_event.key == pygame.K_RIGHT:
+                                    direction.append(4)  # Вправо
+                                    current_direction = 0
+        
+        # Выбор объекта для размещения (по нажатию цифр)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_1:
+                last_color = 1
+                current_object = "Минотавр"
+            elif event.key == pygame.K_2:
+                last_color = 2
+                current_object = "Ключ"
+            elif event.key == pygame.K_3:
+                last_color = 3
+                current_object = "Выход"
+            elif event.key == pygame.K_4:
+                last_color = 4
+                current_object = "Начало Реки"
+            elif event.key == pygame.K_5:
+                last_color = 5
+                current_object = "Конец Реки"
+            elif event.key == pygame.K_6:
+                last_color = 6
+                current_object = "Река"
+            elif event.key == pygame.K_7:
+                last_color = 7
+                current_object = "Стена"
+            elif event.key == pygame.K_8:
+                last_color = 8
+                current_object = "Портал"
+            elif event.key == pygame.K_9:
+                last_color = 9
+                current_object = "Больница"
+            elif event.key == pygame.K_0:
+                last_color = 10
+                current_object = "Начало"
+
+    # Отрисовка редактора карты
+    display.fill(WHITE)  # Очистка экрана
+    
+    # Отрисовка сетки поля
+    for row in range(field_height // SIZE):
+        for col in range(field_width // SIZE):
+            pygame.draw.rect(display, BLACK, 
+                           (col * SIZE, row * SIZE, SIZE, SIZE), 1)
+    
+    # Отрисовка размещенных объектов
+    for i in range(len(click_x)):
+        if last_color != 0 and river_flow_active != 0:
+            display.blit(
+                images[colors[i]],
+                (click_x[i] // 100 * 100, click_y[i] // 100 * 100)
+            )
+    
+    # Отрисовка интерфейса редактора
+    if current_object is not None:
+        text = font.render(current_object, True, BLACK)
+        text_rect = text.get_rect(center=(1300, 500))
+        display.blit(text, text_rect)
+    
+    text = font.render(RULES1, True, BLACK)
+    text_rect = text.get_rect(center=(1300, 550))
+    display.blit(text, text_rect)
+    
+    text = font.render(RULES2, True, BLACK)
+    text_rect = text.get_rect(center=(1300, 600))
+    display.blit(text, text_rect)
+    
+    text = font.render(DONE_BUTTON_TEXT, True, BLACK)
+    text_rect = text.get_rect(center=(1300, 700))
+    display.blit(text, text_rect)
+    
+    pygame.display.flip()  # Обновление экрана
+
+# Создание копии поля для игрового режима
+field_copy = []
+for i in range(field_width // SIZE):
+    field_copy.append([0] * (field_height // SIZE))
+
+# ========== ЭТАП 3: ИГРОВОЙ РЕЖИМ ==========
+while player_mode:
+    display.fill(WHITE)  # Очистка экрана
+    
+    # Обработка событий
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        if c.type == pygame.MOUSEBUTTONDOWN and c.button == 1:
-            if(1100<c.pos[0]<1300 and 650<c.pos[1]<850):
+        
+        # Запуск бесконечного режима по кнопке
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if 1100 < event.pos[0] < 1300 and 650 < event.pos[1] < 850:
                 threading.Thread(target=run_infinite_field).start()
-        if c.type==pygame.KEYDOWN:
-            if c.key==pygame.K_UP:   
-                yn=yn-1  
-                if yn<0:
-                    Objekt3="Стена"
+        
+        # Обработка движения игрока
+        if event.type == pygame.KEYDOWN:
+            # Движение вверх
+            if event.key == pygame.K_UP:
+                player_y -= 1  # Изменяем координату Y
+                
+                # Проверка выхода за границы
+                if player_y < 0:
+                    cell_description = "Стена"
                 else:
-                    Objekt3=proverka(xn,yn)
-                Objekt2=f"Вы сдвинулись на клетку вверх и встретили {Objekt3}"
-                if Objekt3=="Стена":
-                    yn=yn+1
-                elif Objekt3=="Минотавр":
-                    yn=yb
-                    xn=xb
-                elif Objekt3=="Ключ":
-                    kluch=kluch+1
-                    pole[yn][xn]=0
-                elif Objekt3=="Выход" and kluch==nu:
-                    Objekt2="Вы победили!"
-                elif Objekt3=="Портал":
-                    for h in range(len(portx)):
-                        if xn==portx[h] and yn==porty[h]:
-                            nom=h
-                            nom=nom+1
-                        if nom==len(portx):
-                            nom=0
-                    xn=portx[nom]
-                    yn=porty[nom]
-                elif Objekt3=="Начало Реки":
-                   xn,yn=reca(xn,yn)
-                elif Objekt3=="Река":
-                    xn,yn=reca(xn,yn)
-            elif c.key==pygame.K_DOWN:
-                yn=yn+1
-                if yn==height//100:
-                    Objekt3="Стена"
+                    cell_description = check_cell(player_x, player_y)
+                
+                player_status = (f"Вы сдвинулись на клетку вверх и встретили "
+                               f"{cell_description}")
+                
+                # Обработка столкновений с разными объектами
+                if cell_description == "Стена":
+                    player_y += 1  # Возвращаем на предыдущую позицию
+                elif cell_description == "Минотавр":
+                    # Телепортация в больницу
+                    player_y = hospital_y
+                    player_x = hospital_x
+                elif cell_description == "Ключ":
+                    # Сбор ключа
+                    keys_collected += 1
+                    field[player_y][player_x] = 0  # Убираем ключ с поля
+                elif cell_description == "Выход" and keys_collected == keys_total:
+                    # Условие победы
+                    player_status = "Вы победили!"
+                elif cell_description == "Портал":
+                    # Телепортация через портал
+                    for i in range(len(portal_x)):
+                        if (player_x == portal_x[i] 
+                                and player_y == portal_y[i]):
+                            current_index = i
+                            current_index += 1
+                        if current_index == len(portal_x):
+                            current_index = 0
+                    player_x = portal_x[current_index]
+                    player_y = portal_y[current_index]
+                elif cell_description in ["Начало Реки", "Река"]:
+                    # Движение по течению реки
+                    player_x, player_y = river_flow(player_x, player_y)
+            
+            # Движение вниз (аналогично движению вверх)
+            elif event.key == pygame.K_DOWN:
+                player_y += 1
+                if player_y == field_height // 100:
+                    cell_description = "Стена"
                 else:
-                    Objekt3=proverka(xn,yn)
-                Objekt2=f"Вы сдвинулись на клетку вниз и встретили {Objekt3}"
-                if Objekt3=="Стена":
-                    yn=yn-1
-                elif Objekt3=="Минотавр":
-                    yn=yb
-                    xn=xb
-                elif Objekt3=="Ключ":
-                    kluch=kluch+1
-                    pole[yn][xn]=0
-                elif Objekt3=="Выход" and kluch==nu:
-                    Objekt2="Вы победили!"
-                elif Objekt3=="Портал":
-                    for h in range(len(portx)):
-                        if xn==portx[h] and yn==porty[h]:
-                            nom=h
-                            nom=nom+1
-                        if nom==len(portx):
-                            nom=0
-                    xn=portx[nom]
-                    yn=porty[nom]
-                elif Objekt3=="Начало Реки":
-                    xn,yn=reca(xn,yn)
-                elif Objekt3=="Река":
-                    xn,yn=reca(xn,yn)
-            elif c.key==pygame.K_LEFT:
-                xn=xn-1
-                if xn<0:
-                    Objekt3="Стена"
+                    cell_description = check_cell(player_x, player_y)
+                
+                player_status = (f"Вы сдвинулись на клетку вниз и встретили "
+                               f"{cell_description}")
+                
+                if cell_description == "Стена":
+                    player_y -= 1
+                elif cell_description == "Минотавр":
+                    player_y = hospital_y
+                    player_x = hospital_x
+                elif cell_description == "Ключ":
+                    keys_collected += 1
+                    field[player_y][player_x] = 0
+                elif cell_description == "Выход" and keys_collected == keys_total:
+                    player_status = "Вы победили!"
+                elif cell_description == "Портал":
+                    for i in range(len(portal_x)):
+                        if (player_x == portal_x[i] 
+                                and player_y == portal_y[i]):
+                            current_index = i
+                            current_index += 1
+                        if current_index == len(portal_x):
+                            current_index = 0
+                    player_x = portal_x[current_index]
+                    player_y = portal_y[current_index]
+                elif cell_description in ["Начало Реки", "Река"]:
+                    player_x, player_y = river_flow(player_x, player_y)
+            
+            # Движение влево (аналогично)
+            elif event.key == pygame.K_LEFT:
+                player_x -= 1
+                if player_x < 0:
+                    cell_description = "Стена"
                 else:
-                    Objekt3=proverka(xn,yn)
-                Objekt2=f"Вы сдвинулись на клетку влево и встретили {Objekt3}"
-                if Objekt3=="Стена":
-                    xn=xn+1
-                elif Objekt3=="Минотавр":
-                    yn=yb
-                    xn=xb
-                elif Objekt3=="Ключ":
-                    kluch=kluch+1
-                    pole[yn][xn]=0
-                elif Objekt3=="Выход" and kluch==nu:
-                    Objekt2="Вы победили!"
-                elif Objekt3=="Портал":
-                    for h in range(len(portx)):
-                        if xn==portx[h] and yn==porty[h]:
-                            nom=h
-                            nom=nom+1
-                        if nom==len(portx):
-                            nom=0
-                    xn=portx[nom]
-                    yn=porty[nom]
-                elif Objekt3=="Начало Реки":
-                    xn,yn=reca(xn,yn)
-                elif Objekt3=="Река":
-                    xn,yn=reca(xn,yn)
-            elif c.key==pygame.K_RIGHT:
-                xn=xn+1
-                if xn==width//100:
-                    Objekt3="Стена"
+                    cell_description = check_cell(player_x, player_y)
+                
+                player_status = (f"Вы сдвинулись на клетку влево и встретили "
+                               f"{cell_description}")
+                
+                if cell_description == "Стена":
+                    player_x += 1
+                elif cell_description == "Минотавр":
+                    player_y = hospital_y
+                    player_x = hospital_x
+                elif cell_description == "Ключ":
+                    keys_collected += 1
+                    field[player_y][player_x] = 0
+                elif cell_description == "Выход" and keys_collected == keys_total:
+                    player_status = "Вы победили!"
+                elif cell_description == "Портал":
+                    for i in range(len(portal_x)):
+                        if (player_x == portal_x[i] 
+                                and player_y == portal_y[i]):
+                            current_index = i
+                            current_index += 1
+                        if current_index == len(portal_x):
+                            current_index = 0
+                    player_x = portal_x[current_index]
+                    player_y = portal_y[current_index]
+                elif cell_description in ["Начало Реки", "Река"]:
+                    player_x, player_y = river_flow(player_x, player_y)
+            
+            # Движение вправо (аналогично)
+            elif event.key == pygame.K_RIGHT:
+                player_x += 1
+                if player_x == field_width // 100:
+                    cell_description = "Стена"
                 else:
-                    Objekt3=proverka(xn,yn)
-                Objekt2=f"Вы сдвинулись на клетку вправо и встретили {Objekt3}"
-                if Objekt3=="Стена":
-                    xn=xn-1
-                elif Objekt3=="Минотавр":
-                    yn=yb
-                    xn=xb
-                elif Objekt3=="Ключ":
-                    kluch=kluch+1
-                    pole[yn][xn]=0
-                elif Objekt3=="Выход" and kluch==nu:
-                    Objekt2="Вы победили!"
-                elif Objekt3=="Портал":
-                    for h in range(len(portx)):
-                        if xn==portx[h] and yn==porty[h]:
-                            nom=h
-                            nom=nom+1
-                        if nom==len(portx):
-                            nom=0
-                    xn=portx[nom]
-                    yn=porty[nom]
-                elif Objekt3=="Начало Реки":
-                    xn,yn=reca(xn,yn)
-                elif Objekt3=="Река":
-                    xn,yn=reca(xn,yn)
-    text=font.render(Objekt2,True,a)
-    text_rect=text.get_rect(center=(1300,500))
-    disp.blit(text,text_rect)
-    pygame.draw.rect(disp,a,(1100,650,200,200),1)
-    print(yn)
-    print(xn)
-    pygame.display.flip()
-    print(rekay)
-    print(naprav)
-    pygame.display.flip()
+                    cell_description = check_cell(player_x, player_y)
+                
+                player_status = (f"Вы сдвинулись на клетку вправо и встретили "
+                               f"{cell_description}")
+                
+                if cell_description == "Стена":
+                    player_x -= 1
+                elif cell_description == "Минотавр":
+                    player_y = hospital_y
+                    player_x = hospital_x
+                elif cell_description == "Ключ":
+                    keys_collected += 1
+                    field[player_y][player_x] = 0
+                elif cell_description == "Выход" and keys_collected == keys_total:
+                    player_status = "Вы победили!"
+                elif cell_description == "Портал":
+                    for i in range(len(portal_x)):
+                        if (player_x == portal_x[i] 
+                                and player_y == portal_y[i]):
+                            current_index = i
+                            current_index += 1
+                        if current_index == len(portal_x):
+                            current_index = 0
+                    player_x = portal_x[current_index]
+                    player_y = portal_y[current_index]
+                elif cell_description in ["Начало Реки", "Река"]:
+                    player_x, player_y = river_flow(player_x, player_y)
+
+    # Отрисовка игрового интерфейса
+    text = font.render(player_status, True, BLACK)
+    text_rect = text.get_rect(center=(1300, 500))
+    display.blit(text, text_rect)
+    
+    # Отрисовка кнопки бесконечного режима
+    pygame.draw.rect(display, BLACK, (1100, 650, 200, 200), 1)
+    
+    pygame.display.flip()  # Обновление экрана
