@@ -11,10 +11,6 @@ pygame.init()
 
 
 def find_file(filename, search_path):
-    """
-    Поиск файла в указанной директории и всех поддиректориях.
-    Возвращает полный путь к файлу или None, если файл не найден.
-    """
     for root, dirs, files in os.walk(search_path):
         if filename in files:
             return os.path.join(root, filename)
