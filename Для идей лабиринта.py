@@ -1,7 +1,5 @@
 import pygame,os,sys,subprocess,threading
 pygame.init()
-
-
 def find_file(filename, search_path):
     for root, dirs, files in os.walk(search_path):
         if filename in files:
@@ -43,7 +41,21 @@ def check_cell(x, y):
     elif cell_content == 10:
         return "Начало"
     return "Неизвестный объект"
-
+def getSizeByPressedKey(key):
+    Size=0
+    if key == pygame.K_5:
+        Size= 500
+    elif key == pygame.K_6:
+        Size= 600
+    elif key == pygame.K_7:
+        Size= 700
+    elif key == pygame.K_8:
+        Size= 800
+    elif key == pygame.K_9:
+        Size= 900
+    else:
+        return False
+    return Size
 
 def river_flow(x, y):
     """
@@ -151,39 +163,22 @@ while selecting_size:
         elif event.type == pygame.KEYDOWN:
             # Обработка ввода цифр для выбора размера
             if width_set == 0:  # Если ширина еще не выбрана
-                if event.key == pygame.K_5:
-                    field_width = 500
+                size = getSizeByPressedKey(event.key)
+                if size!=False:
                     width_set = 1
-                elif event.key == pygame.K_6:
-                    field_width = 600
-                    width_set = 1
-                elif event.key == pygame.K_7:
-                    field_width = 700
-                    width_set = 1
-                elif event.key == pygame.K_8:
-                    field_width = 800
-                    width_set = 1
-                elif event.key == pygame.K_9:
-                    field_width = 900
-                    width_set = 1
+                    field_width = size
+                else:
+                    width_set = 0
             else:  # Если ширина выбрана, выбираем высоту
-                if event.key == pygame.K_5:
-                    field_height = 500
-                elif event.key == pygame.K_6:
-                    field_height = 600
-                elif event.key == pygame.K_7:
-                    field_height = 700
-                elif event.key == pygame.K_8:
-                    field_height = 800
-                elif event.key == pygame.K_9:
-                    field_height = 900
-            
+                size = getSizeByPressedKey(event.key)
+                if size!=False:
+                    field_height=size
             # Обработка backspace для сброса выбора
             if event.key == pygame.K_BACKSPACE:
                 width_set = 0
 
     # Отображение интерфейса выбора размера
-    size_display = f"{field_width//100}x{field_height//100}"  # Формат "5x5"
+    size_display = f"{field_width//100}x{field_height//100}" 
     display.fill(WHITE)  # Очистка экрана
     
     # Отображение текущего размера
