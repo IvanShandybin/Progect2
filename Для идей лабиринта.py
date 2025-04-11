@@ -1,4 +1,4 @@
-import pygame,os,sys,subprocess,threading
+import pygame,os,sys,subprocess,threading 
 pygame.init()
 def find_file(filename, search_path):
     for root, dirs, files in os.walk(search_path):
@@ -41,6 +41,85 @@ def check_cell(x, y):
     elif cell_content == 10:
         return "Начало"
     return "Неизвестный объект"
+def check_cell_vestrel(x,y):
+    '''
+    Проверяет взаимодейстрие пули с разными объектами
+    '''
+    cell_content = field[y][x]
+    if cell_content == 1:
+        field[y][x] = 0
+        return 0
+    elif cell_content == 0:
+        return 0
+    elif cell_content == 2:
+        return 0
+    elif cell_content == 3:
+        return 0
+    elif cell_content == 4:
+        return 1
+    elif cell_content == 5:
+        return 1
+    elif cell_content == 6:
+        return 1
+    elif cell_content == 7:
+        return 0
+    elif cell_content == 8:
+        return 0
+    elif cell_content == 9:
+        return 0
+    elif cell_content == 10:
+        return 1
+def vestrel(shoot,x,y):
+    '''
+    Совершает выстрел
+    '''
+    while shoot==1:
+        smej=0
+        for key_event in pygame.event.get():
+            if key_event.type == pygame.KEYDOWN:
+                if key_event.key == pygame.K_BACKSPACE: # Отмена выстрела
+                    return
+                # Выбор направления выстрела
+                if key_event.key == pygame.K_UP: # Выстрел вверх
+                    smej=1
+                    while smej==1: # Пуля двигается в выбранном направлении, взаимодействуя с объектами
+                        y=y-1
+                        if y>=0:
+                            smej=check_cell_vestrel(x,y)
+                        else:
+                            smej=0
+                    shoot = 0
+                elif key_event.key == pygame.K_DOWN: # Выстрел вниз
+                    smej=1
+                    while smej==1: # Пуля двигается в выбранном направлении, взаимодействуя с объектами
+                        y=y+1
+                        if y<=(field_height//SIZE):
+                            smej=check_cell_vestrel(x,y)
+                        else:
+                            smej=0
+                    shoot = 0
+                elif key_event.key == pygame.K_LEFT: # Выстрел влево
+                    smej=1
+                    while smej==1: # Пуля двигается в выбранном направлении, взаимодействуя с объектами
+                        x=x-1
+                        if x>=0:
+                            smej=check_cell_vestrel(x,y)
+                        else:
+                            smej=0
+                    shoot= 0
+                elif key_event.key == pygame.K_RIGHT: # Выстрел вправо
+                    smej=1
+                    
+                    while smej==1: # Пуля двигается в выбранном направлении, взаимодействуя с объектами
+                        x=x+1
+                        if x<=(field_width//SIZE):
+                            smej=check_cell_vestrel(x,y)
+                        else:
+                            smej=0
+                    shoot = 0
+    return
+
+
 def getSizeByPressedKey(key):
     Size=0
     if key == pygame.K_5:
@@ -361,6 +440,15 @@ while player_mode:
         # Обработка движения игрока
         if event.type == pygame.KEYDOWN:
             # Движение вверх
+            if event.key == pygame.K_e:
+                    player_status="Выберите направление выстрела с помощью стрелок или отмениете его с помощью backspace"
+                    text = font.render(player_status, True, BLACK)
+                    text_rect = text.get_rect(center=(1100, 500))
+                    display.blit(text, text_rect)
+                    pygame.display.flip()
+                    vestrel(1,player_x,player_y)
+                    player_status = (f"Вы стоите в "
+                                f"{check_cell(player_x, player_y)}")
             if event.key == pygame.K_UP:
                 player_y -= 1  # Изменяем координату Y
                 
