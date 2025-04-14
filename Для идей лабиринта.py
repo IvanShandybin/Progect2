@@ -144,7 +144,7 @@ def river_flow(x, y):
     # Находим индекс текущей клетки реки
     for i in range(len(river_x)):
         if x == river_x[i] and y == river_y[i]:
-            index = i
+             index = i
     
     # Меняем координаты в зависимости от направления течения
     if direction[index] == 1:  # Течение вверх
@@ -439,7 +439,6 @@ while player_mode:
         
         # Обработка движения игрока
         if event.type == pygame.KEYDOWN:
-            # Движение вверх
             if event.key == pygame.K_e:
                     player_status="Выберите направление выстрела с помощью стрелок или отмениете его с помощью backspace"
                     text = font.render(player_status, True, BLACK)
@@ -449,6 +448,7 @@ while player_mode:
                     vestrel(1,player_x,player_y)
                     player_status = (f"Вы стоите в "
                                 f"{check_cell(player_x, player_y)}")
+            # Движение вверх
             if event.key == pygame.K_UP:
                 player_y -= 1  # Изменяем координату Y
                 
