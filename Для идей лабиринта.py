@@ -12,11 +12,11 @@ def run_infinite_field():
     subprocess.run([sys.executable, file_path])
 
 
-def check_cell(x, y):
     """
     Проверка содержимого клетки поля по координатам (x,y).
     Возвращает текстовое описание объекта в клетке.
     """
+def check_cell(x, y):
     cell_content = field[y][x]
     if cell_content == 1:
         return "Минотавр"
