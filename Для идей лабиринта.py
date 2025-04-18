@@ -189,6 +189,7 @@ images = {
 # Переменные состояния игрока
 player_status = "Вы стоите в начале"  # Текущий статус игрока
 cell_description = "Пустую клетку"  # Описание текущей клетки
+Textnapr="" # Подсказка для направления игры
 player_x = -1  # Позиция игрока по X (начальное значение -1 означает не установлено)
 player_y = -1  # Позиция игрока по Y
 hospital_x = 0  # X-координата больницы
@@ -332,6 +333,11 @@ while map_ready:
                     
                     # Выбор направления течения реки
                     while current_direction == 1:
+                        Textnapr="Выберите направление с помощью стрелок"
+                        text = font.render(Textnapr, True, BLACK)
+                        text_rect = text.get_rect(center=(1300, 400))
+                        display.blit(text, text_rect)
+                        pygame.display.flip()
                         for key_event in pygame.event.get():
                             if key_event.type == pygame.KEYDOWN:
                                 if key_event.key == pygame.K_UP:
@@ -346,6 +352,7 @@ while map_ready:
                                 elif key_event.key == pygame.K_RIGHT:
                                     direction.append(4)  # Вправо
                                     current_direction = 0
+                                Textnapr=""
         
         # Выбор объекта для размещения (по нажатию цифр)
         if event.type == pygame.KEYDOWN:
