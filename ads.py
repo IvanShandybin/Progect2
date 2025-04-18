@@ -11,7 +11,7 @@ view_x=0
 view_y=0
 MOVE_SPEED=10
 clock=pygame.time.Clock()
-pole=[[0 for _ in range(SCREEN_HEIGHT // CELL_SIZE)] for _ in range(SCREEN_WIDTH // CELL_SIZE)]
+pole=[[0 for _ in range(SCREEN_HEIGHT//CELL_SIZE)] for _ in range(SCREEN_WIDTH//CELL_SIZE)]
 zvetlast=0
 Objekt=None
 running=True
@@ -32,41 +32,21 @@ while running:
         if event.type==pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            zvetlast=zvetlast+1
+            if zvetlast==11:
+                zvetlast=0
             cell_x = (event.pos[0] + view_x) // CELL_SIZE
             cell_y = (event.pos[1] + view_y) // CELL_SIZE
             if 0 <= cell_x < len(pole) and 0 <= cell_y < len(pole[0]):
                 pole[cell_x][cell_y] = zvetlast
-        elif event.type==pygame.KEYDOWN:
-            if event.key==pygame.K_1:
-                zvetlast=1
-                Objekt="Минотавр"
-            elif event.key==pygame.K_2:
-                zvetlast=2
-                Objekt="Ключ"
-            elif event.key==pygame.K_3:
-                zvetlast=3
-                Objekt = "Выход"
-            elif event.key==pygame.K_4:
-                zvetlast=4
-                Objekt="Начало Реки"
-            elif event.key==pygame.K_5:
-                zvetlast=5
-                Objekt="Конец Реки"
-            elif event.key==pygame.K_6:
-                zvetlast=6
-                Objekt="Река"
-            elif event.key==pygame.K_7:
-                zvetlast=7
-                Objekt="Стена"
-            elif event.key==pygame.K_8:
-                zvetlast=8
-                Objekt="Портал"
-            elif event.key==pygame.K_9:
-                zvetlast=9
-                Objekt="Больница"
-            elif event.key==pygame.K_0:
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+            zvetlast=zvetlast-1
+            if zvetlast==-1:
                 zvetlast=10
-                Objekt="Начало"
+            cell_x = (event.pos[0] + view_x) // CELL_SIZE
+            cell_y = (event.pos[1] + view_y) // CELL_SIZE
+            if 0 <= cell_x < len(pole) and 0 <= cell_y < len(pole[0]):
+                pole[cell_x][cell_y] = zvetlast
     keys=pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
         view_x-=MOVE_SPEED
@@ -101,6 +81,6 @@ while running:
         text=font.render(Objekt,True,BLACK)
         screen.blit(text,(10, 10))
     pygame.display.flip()
-    clock.tick(120)
+    clock.tick(60)
 pygame.quit()
 sys.exit()
